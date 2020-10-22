@@ -1,0 +1,3 @@
+rootProject.name = "ComposeDrawer"
+include ':app'
+include ':drawer-base'
