@@ -12,7 +12,10 @@ import com.alorma.drawer_base.DebugDrawerLayout
 
 @Composable
 fun HomeScreen() {
-    DebugDrawerLayout(drawerContent = { Text(text ="Esto es el drawer") }) {
+    DebugDrawerLayout(
+        debug = { BuildConfig.DEBUG },
+        drawerContent = { Text(text = "Esto es el drawer") },
+    ) {
         Scaffold(
             topBar = {
                 val title = stringResource(id = R.string.app_name)
