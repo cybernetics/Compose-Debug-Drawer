@@ -6,6 +6,7 @@ import androidx.compose.animation.core.AnimationClockObservable
 import androidx.compose.animation.core.AnimationEndReason
 import androidx.compose.animation.core.SpringSpec
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -157,11 +158,6 @@ fun rememberDrawerState(
  * @param drawerShape shape of the drawer sheet
  * @param drawerElevation drawer sheet elevation. This controls the size of the shadow below the
  * drawer sheet
- * @param drawerBackgroundColor background color to be used for the drawer sheet
- * @param drawerContentColor color of the content to use inside the drawer sheet. Defaults to
- * either the matching `onFoo` color for [drawerBackgroundColor], or, if it is not a color from
- * the theme, this will keep the same value set above this Surface.
- * @param scrimColor color of the scrim that obscures content when the drawer is open
  * @param bodyContent content of the rest of the UI
  *
  * @throws IllegalStateException when parent has [Float.POSITIVE_INFINITY] width
@@ -169,29 +165,25 @@ fun rememberDrawerState(
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
 fun DebugDrawerLayout(
+    drawerColors: Colors = drawerColorsPalette,
     debug: () -> Boolean = { false },
-    drawerContent: @Composable ColumnScope.() -> Unit,
+    drawerContent: @Composable ColumnScope.() -> Unit = { Text(text = "Esto es el drawer") },
     modifier: Modifier = Modifier,
     drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed),
     gesturesEnabled: Boolean = true,
     drawerShape: Shape = MaterialTheme.shapes.large,
     drawerElevation: Dp = DrawerConstants.DefaultElevation,
-    drawerBackgroundColor: Color = MaterialTheme.colors.surface,
-    drawerContentColor: Color = contentColorFor(drawerBackgroundColor),
-    scrimColor: Color = DrawerConstants.defaultScrimColor,
     bodyContent: @Composable () -> Unit
 ) {
     if (debug()) {
         DebugDrawerLayout(
+            drawerColors = drawerColors,
             drawerContent = drawerContent,
             modifier = modifier,
             drawerState = drawerState,
             gesturesEnabled = gesturesEnabled,
             drawerShape = drawerShape,
             drawerElevation = drawerElevation,
-            drawerBackgroundColor = drawerBackgroundColor,
-            drawerContentColor = drawerContentColor,
-            scrimColor = scrimColor,
             bodyContent = bodyContent,
         )
     } else {
@@ -217,11 +209,6 @@ fun DebugDrawerLayout(
  * @param drawerShape shape of the drawer sheet
  * @param drawerElevation drawer sheet elevation. This controls the size of the shadow below the
  * drawer sheet
- * @param drawerBackgroundColor background color to be used for the drawer sheet
- * @param drawerContentColor color of the content to use inside the drawer sheet. Defaults to
- * either the matching `onFoo` color for [drawerBackgroundColor], or, if it is not a color from
- * the theme, this will keep the same value set above this Surface.
- * @param scrimColor color of the scrim that obscures content when the drawer is open
  * @param bodyContent content of the rest of the UI
  *
  * @throws IllegalStateException when parent has [Float.POSITIVE_INFINITY] width
@@ -229,15 +216,13 @@ fun DebugDrawerLayout(
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
 fun DebugDrawerLayout(
+    drawerColors: Colors = drawerColorsPalette,
     drawerContent: @Composable ColumnScope.() -> Unit,
     modifier: Modifier = Modifier,
     drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed),
     gesturesEnabled: Boolean = true,
     drawerShape: Shape = MaterialTheme.shapes.large,
     drawerElevation: Dp = DrawerConstants.DefaultElevation,
-    drawerBackgroundColor: Color = MaterialTheme.colors.surface,
-    drawerContentColor: Color = contentColorFor(drawerBackgroundColor),
-    scrimColor: Color = DrawerConstants.defaultScrimColor,
     bodyContent: @Composable () -> Unit
 ) {
     WithConstraints(modifier.fillMaxSize()) {
@@ -269,10 +254,10 @@ fun DebugDrawerLayout(
                 open = drawerState.isOpen,
                 onClose = { drawerState.close() },
                 fraction = { calculateFraction(minValue, maxValue, drawerState.offset.value) },
-                color = scrimColor
+                color = DrawerConstants.defaultScrimColor
             )
 
-            Surface(
+            Box(
                 modifier = with(DensityAmbient.current) {
                     Modifier.preferredSizeIn(
                         minWidth = constraints.minWidth.toDp(),
@@ -280,16 +265,26 @@ fun DebugDrawerLayout(
                         maxWidth = constraints.maxWidth.toDp(),
                         maxHeight = constraints.maxHeight.toDp()
                     )
-                }.offsetPx(x = drawerState.offset).padding(start = VerticalDrawerPadding),
-                shape = drawerShape,
-                color = drawerBackgroundColor,
-                contentColor = drawerContentColor,
-                elevation = drawerElevation
+                }.offsetPx(x = drawerState.offset).padding(start = VerticalDrawerPadding)
             ) {
-                Column(Modifier.fillMaxSize(), children = drawerContent)
+                Surface(
+                    shape = drawerShape,
+                    color = drawerColors.background,
+                    contentColor = drawerColors.onBackground,
+                    elevation = drawerElevation
+                ) {
+                    DrawerContent(drawerContent)
+                }
             }
         }
     }
+}
+
+@Composable
+fun DrawerContent(
+    drawerContent: @Composable ColumnScope.() -> Unit
+) {
+    Column(Modifier.fillMaxSize(), children = drawerContent)
 }
 
 /**
