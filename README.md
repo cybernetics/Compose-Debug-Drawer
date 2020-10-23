@@ -63,3 +63,16 @@ class DeviceModule : DebugModule {
     }
 }
 ```
+
+## Theming && Customization
+
+Update module UI:
+
+```kotlin
+DebugDrawerLayout(
+    moduleModifier = Modifier
+        .padding()
+        .clip()
+        .border(),
+)
+```

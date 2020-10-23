@@ -1,10 +1,6 @@
 package com.alorma.drawer_base
 
 
-import androidx.compose.animation.asDisposableClock
-import androidx.compose.animation.core.AnimationClockObservable
-import androidx.compose.animation.core.AnimationEndReason
-import androidx.compose.animation.core.SpringSpec
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Icon
 import androidx.compose.foundation.Text
@@ -14,17 +10,12 @@ import androidx.compose.foundation.lazy.LazyColumnForIndexed
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Providers
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.savedinstancestate.Saver
-import androidx.compose.runtime.savedinstancestate.rememberSavedInstanceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.WithConstraints
 import androidx.compose.ui.gesture.scrollorientationlocking.Orientation
 import androidx.compose.ui.gesture.tapGestureFilter
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.AnimationClockAmbient
 import androidx.compose.ui.platform.DensityAmbient
 import androidx.compose.ui.platform.LayoutDirectionAmbient
 import androidx.compose.ui.res.imageResource
@@ -35,28 +26,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 
-/**
- * Navigation drawers provide access to destinations in your app.
- *
- * Modal navigation drawers block interaction with the rest of an app’s content with a scrim.
- * They are elevated above most of the app’s UI and don’t affect the screen’s layout grid.
- *
- * See [BottomDrawerLayout] for a layout that introduces a bottom drawer, suitable when
- * using bottom navigation.
- *
- * @sample androidx.compose.material.samples.ModalDrawerSample
- *
- * @param drawerContent composable that represents content inside the drawer
- * @param modifier optional modifier for the drawer
- * @param drawerState state of the drawer
- * @param gesturesEnabled whether or not drawer can be interacted by gestures
- * @param drawerShape shape of the drawer sheet
- * @param drawerElevation drawer sheet elevation. This controls the size of the shadow below the
- * drawer sheet
- * @param bodyContent content of the rest of the UI
- *
- * @throws IllegalStateException when parent has [Float.POSITIVE_INFINITY] width
- */
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
 fun DebugDrawerLayout(
@@ -64,6 +33,7 @@ fun DebugDrawerLayout(
     drawerColors: Colors = drawerColorsPalette,
     drawerModules: @Composable () -> List<DebugModule> = { emptyList() },
     initialDrawerState: DrawerValue = DrawerValue.Closed,
+    moduleModifier: Modifier = Modifier,
     bodyContent: @Composable (DrawerState) -> Unit
 ) {
 
@@ -120,9 +90,12 @@ fun DebugDrawerLayout(
                         shape = MaterialTheme.shapes.large,
                         color = DrawerColors.current.background,
                         contentColor = DrawerColors.current.onSurface,
-                        elevation = androidx.compose.material.DrawerConstants.DefaultElevation
+                        elevation = DrawerConstants.DefaultElevation
                     ) {
-                        DrawerContent(drawerModules)
+                        DrawerContent(
+                            drawerModules = drawerModules,
+                            moduleModifier = moduleModifier,
+                        )
                     }
                 }
             }
@@ -133,13 +106,17 @@ fun DebugDrawerLayout(
 @Composable
 fun DrawerContent(
     drawerModules: @Composable () -> List<DebugModule> = { emptyList() },
+    moduleModifier: Modifier = Modifier,
 ) {
     val items = drawerModules()
     LazyColumnForIndexed(
         modifier = Modifier.fillMaxSize(),
         items = items
     ) { index, module ->
-        DrawerModule(module)
+        DrawerModule(
+            module = module,
+            modifier = moduleModifier,
+        )
         if (index < items.size + 1) {
             Spacer(modifier = Modifier.preferredHeight(8.dp))
         }
@@ -147,27 +124,16 @@ fun DrawerContent(
 }
 
 @Composable
-fun DrawerModule(module: DebugModule) {
-    Column {
-        Surface(
-            modifier = Modifier.fillMaxWidth().height(48.dp),
-            color = DrawerColors.current.onSurface.compositeOverSurface(alpha = 0.12f),
-            contentColor = DrawerColors.current.secondary,
-        ) {
-            Row(
-                modifier = Modifier.padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                DrawerHeaderIcon(module.icon, 32.dp)
-                Spacer(modifier = Modifier.preferredWidth(8.dp))
-                Text(
-                    modifier = Modifier,
-                    text = module.title,
-                    textAlign = TextAlign.Start,
-                    fontWeight = FontWeight.Bold,
-                )
-            }
-        }
+fun DrawerModule(
+    module: DebugModule,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth().then(modifier),
+    ) {
+        DrawerModuleHeader(
+            module = module,
+        )
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -182,7 +148,39 @@ fun DrawerModule(module: DebugModule) {
 }
 
 @Composable
-private fun DrawerHeaderIcon(icon: IconType, size: Dp) {
+private fun DrawerModuleHeader(
+    module: DebugModule
+) {
+    Surface(
+        modifier = Modifier.fillMaxWidth().height(48.dp),
+        color = DrawerColors.current.onSurface.compositeOverSurface(alpha = 0.12f),
+        contentColor = DrawerColors.current.secondary,
+    ) {
+        Row(
+            modifier = Modifier.padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            DrawerModuleHeaderIcon(module.icon, 32.dp)
+            Spacer(modifier = Modifier.preferredWidth(8.dp))
+            DrawerModuleHeaderText(module)
+        }
+    }
+}
+
+@Composable
+private fun DrawerModuleHeaderText(
+    module: DebugModule
+) {
+    Text(
+        modifier = Modifier,
+        text = module.title,
+        textAlign = TextAlign.Start,
+        fontWeight = FontWeight.Bold,
+    )
+}
+
+@Composable
+private fun DrawerModuleHeaderIcon(icon: IconType, size: Dp) {
     val modifier = Modifier.preferredSize(size = size)
     when (icon) {
         is IconType.Vector -> Icon(
@@ -198,26 +196,6 @@ private fun DrawerHeaderIcon(icon: IconType, size: Dp) {
             ),
         )
     }
-}
-
-/**
- * Object to hold default values for [DebugDrawerLayout] and [BottomDrawerLayout]
- */
-object DrawerConstants {
-
-    /**
-     * Default Elevation for drawer sheet as specified in material specs
-     */
-    val DefaultElevation = 16.dp
-
-    @Composable
-    val defaultScrimColor: Color
-        get() = MaterialTheme.colors.onSurface.copy(alpha = ScrimDefaultOpacity)
-
-    /**
-     * Default alpha for scrim color
-     */
-    const val ScrimDefaultOpacity = 0.32f
 }
 
 private fun calculateFraction(a: Float, b: Float, pos: Float) =
@@ -247,7 +225,3 @@ private fun Scrim(
 
 private val VerticalDrawerPadding = 56.dp
 private val DrawerVelocityThreshold = 400.dp
-
-private const val DrawerStiffness = 1000f
-
-private val AnimationSpec = SpringSpec<Float>(stiffness = DrawerStiffness)
