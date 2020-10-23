@@ -1,5 +1,7 @@
 # ComposeDrawer
 
+Composable Debug Drawer for Jetpack Compose apps
+
 <img width="250" src="art/drawer-v0.0.1-alpha-01.png" />
 
 ## Install
