@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ContextAmbient
 import androidx.compose.ui.unit.dp
 import com.alorma.drawer_base.DebugModule
 import com.alorma.drawer_base.DrawerColors
@@ -18,12 +19,15 @@ open class ActionsModule(
 
     @Composable
     override fun build() {
+        ContextAmbient
         Column {
             actions.forEachIndexed { index, action ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    action.build(Modifier.fillMaxWidth())
+                    action.build(
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
                 if (index < actions.size - 1) {
                     Spacer(modifier = Modifier.preferredHeight(8.dp))
@@ -37,7 +41,10 @@ sealed class DebugDrawerAction {
     @Composable
     abstract fun build(modifier: Modifier)
 
-    data class ButtonAction(val text: String) : DebugDrawerAction() {
+    data class ButtonAction(
+        val text: String,
+        val onClick: () -> Unit
+    ) : DebugDrawerAction() {
 
         @Composable
         override fun build(modifier: Modifier) {
@@ -45,7 +52,7 @@ sealed class DebugDrawerAction {
                 modifier = modifier,
                 backgroundColor = DrawerColors.current.primary,
                 contentColor = DrawerColors.current.onPrimary,
-                onClick = {},
+                onClick = onClick,
                 content = { Text(text) }
             )
         }
