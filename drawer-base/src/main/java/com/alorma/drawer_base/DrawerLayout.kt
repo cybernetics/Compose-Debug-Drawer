@@ -295,11 +295,6 @@ fun DebugDrawerLayout(
 }
 
 @Composable
-private fun Color.compositeOverSurface(alpha: Float = 1f): Color {
-    return copy(alpha = alpha).compositeOver(DrawerColors.current.surface)
-}
-
-@Composable
 fun DrawerContent(
     drawerModules: () -> List<DebugModule> = { emptyList() },
 ) {
