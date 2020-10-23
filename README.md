@@ -34,8 +34,13 @@ DebugDrawerLayout(
   drawerModules = {
     TODO()
   }
-)
+
+) {
+  // TODO Add your APP Content here
+}
 ```
+
+This library automatically handles the debug / release state, so no need to remove the drawer on Release builds
 
 ## Modules
 
@@ -45,9 +50,11 @@ Add modules as a list of `DebugModule`s
 DebugDrawerLayout(
   debug = { BuildConfig.DEBUG },
   drawerModules = {
-    listOf(DeviceModule())
+    listOf(DeviceModule(), BuildModule())
   }
-)
+) {
+  // TODO Add your APP Content here
+}
 ```
 
 #### Actions Module
