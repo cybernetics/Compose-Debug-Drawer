@@ -1,5 +1,6 @@
 package com.alorma.drawer_modules
 
+import android.content.Context
 import android.os.Build
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.*
@@ -25,22 +26,11 @@ fun BuildModule() = object : DebugModule {
     override fun build() {
         val context = ContextAmbient.current
 
-        val info = context.packageManager.getPackageInfo(context.packageName, 0)
-
-        val infoVersion = "Version" to
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    info.longVersionCode.toString()
-                } else {
-                    info.versionCode.toString()
-                }
-        val infoName = "Name" to info.versionName
-        val infoPackage = "Package" to info.packageName
-
-        val items = listOf(
-            infoVersion,
-            infoName,
-            infoPackage
-        )
+        val items = try {
+            obtainBuildInfo(context)
+        } catch (e: NullPointerException) {
+            debugBuildInfo()
+        }
 
         Column {
             items.forEachIndexed { index, item ->
@@ -65,5 +55,37 @@ fun BuildModule() = object : DebugModule {
                 }
             }
         }
+    }
+
+    private fun obtainBuildInfo(context: Context): List<Pair<String, String>> {
+        val info = context.packageManager.getPackageInfo(context.packageName, 0)
+
+        val versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            info.longVersionCode.toString()
+        } else {
+            info.versionCode.toString()
+        }
+
+        val infoVersion = "Version" to versionCode
+        val infoName = "Name" to info.versionName
+        val infoPackage = "Package" to info.packageName
+
+        return listOf(
+            infoVersion,
+            infoName,
+            infoPackage
+        )
+    }
+
+    private fun debugBuildInfo(): List<Pair<String, String>> {
+        val infoVersion = "Version" to "11141"
+        val infoName = "Name" to "1.1.4"
+        val infoPackage = "Package" to "com.alorma"
+
+        return listOf(
+            infoVersion,
+            infoName,
+            infoPackage
+        )
     }
 }
