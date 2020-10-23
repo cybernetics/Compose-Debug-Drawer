@@ -1,5 +1,7 @@
 # ComposeDrawer
 
+![drawer-v0 0 1-alpha-01](art/drawer-v0.0.1-alpha-01.png)
+
 ## Install
 
 Configure jitpack:
