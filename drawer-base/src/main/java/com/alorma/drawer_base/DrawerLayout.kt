@@ -10,7 +10,7 @@ import androidx.compose.foundation.Icon
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumnFor
+import androidx.compose.foundation.lazy.LazyColumnForIndexed
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Providers
@@ -295,41 +295,59 @@ fun DebugDrawerLayout(
 }
 
 @Composable
-private fun Color.compositeOverSurface(): Color = compositeOver(DrawerColors.current.surface)
+private fun Color.compositeOverSurface(alpha: Float = 1f): Color {
+    return copy(alpha = alpha).compositeOver(DrawerColors.current.surface)
+}
 
 @Composable
 fun DrawerContent(
     drawerModules: () -> List<DebugModule> = { emptyList() },
 ) {
-    LazyColumnFor(
+    val items = drawerModules()
+    LazyColumnForIndexed(
         modifier = Modifier.fillMaxSize(),
-        items = drawerModules()
-    ) { module ->
+        items = items
+    ) { index, module ->
         DrawerModule(module)
+        if (index < items.size + 1) {
+            Spacer(modifier = Modifier.preferredHeight(8.dp))
+        }
     }
 }
 
 @Composable
 fun DrawerModule(module: DebugModule) {
     Column {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+        Surface(
+            modifier = Modifier.fillMaxWidth()
+                .height(48.dp),
+            color = DrawerColors.current.onSurface.compositeOverSurface(alpha = 0.12f),
+            contentColor = DrawerColors.current.secondary,
+        ) {
+            Row(
+                modifier = Modifier.padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                DrawerHeaderIcon(module.icon, 32.dp)
+                Spacer(modifier = Modifier.preferredWidth(8.dp))
+                Text(
+                    modifier = Modifier,
+                    text = module.title,
+                    textAlign = TextAlign.Start,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
+        }
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(48.dp)
-                .background(DrawerColors.current.primary.copy(alpha = 0.30f).compositeOverSurface())
+                .background(
+                    color = DrawerColors.current.onSurface.compositeOverSurface(alpha = 0.08f)
+                )
                 .padding(8.dp),
         ) {
-            DrawerHeaderIcon(module.icon, 32.dp)
-            Spacer(modifier = Modifier.preferredWidth(8.dp))
-            Text(
-                modifier = Modifier,
-                text = module.title,
-                textAlign = TextAlign.Start,
-                fontWeight = FontWeight.Bold,
-            )
+            module.build()
         }
-        module.build()
     }
 }
 
