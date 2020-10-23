@@ -1,17 +1,16 @@
 package com.alorma.composedrawer.modules
 
-import androidx.compose.foundation.Text
-import androidx.compose.runtime.Composable
 import com.alorma.composedrawer.R
-import com.alorma.drawer_base.DebugModule
 import com.alorma.drawer_base.IconType
+import com.alorma.drawer_modules.ActionsModule
+import com.alorma.drawer_modules.DebugDrawerAction
 
-object Module1 : DebugModule {
-    override val icon = IconType.Vector(R.drawable.ic_account)
-    override val title: String = "Account"
-
-    @Composable
-    override fun build() {
-        Text(text = "Module 1 content")
-    }
-}
+class DemoActionsModule : ActionsModule(
+    title = "Actions",
+    icon = IconType.Vector(R.drawable.ic_settings),
+    actions = listOf(
+        DebugDrawerAction.ButtonAction("Button 1"),
+        DebugDrawerAction.ButtonAction("Button 2"),
+        DebugDrawerAction.ButtonAction("Button 3"),
+    )
+)

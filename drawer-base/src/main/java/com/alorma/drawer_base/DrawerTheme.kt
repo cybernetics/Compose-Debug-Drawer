@@ -11,6 +11,7 @@ val black = Color(0xFF000000)
 
 val drawerColorsPalette = darkColors(
     primary = blue200,
+    onPrimary = black,
     primaryVariant = blue400,
     secondary = pink200,
     background = black,

@@ -25,7 +25,6 @@ import androidx.compose.ui.gesture.scrollorientationlocking.Orientation
 import androidx.compose.ui.gesture.tapGestureFilter
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.AnimationClockAmbient
 import androidx.compose.ui.platform.DensityAmbient
 import androidx.compose.ui.platform.LayoutDirectionAmbient
@@ -244,7 +243,7 @@ fun DebugDrawerLayout(
             }
 
             val minValue = constraints.maxWidth.toFloat()
-            val maxValue = VerticalDrawerPadding.value
+            val maxValue = 0f
 
             val anchors = mapOf(minValue to DrawerValue.Closed, maxValue to DrawerValue.Open)
             val isRtl = LayoutDirectionAmbient.current == LayoutDirection.Rtl
@@ -269,16 +268,13 @@ fun DebugDrawerLayout(
                     fraction = { calculateFraction(minValue, maxValue, drawerState.offset.value) },
                     color = DrawerConstants.defaultScrimColor
                 )
-
                 Box(
                     modifier = with(DensityAmbient.current) {
-                        Modifier.preferredSizeIn(
-                            minWidth = constraints.minWidth.toDp(),
-                            minHeight = constraints.minHeight.toDp(),
-                            maxWidth = constraints.maxWidth.toDp(),
-                            maxHeight = constraints.maxHeight.toDp()
-                        )
-                    }.offsetPx(x = drawerState.offset).padding(start = VerticalDrawerPadding)
+                        Modifier
+                            .width(constraints.maxWidth.toDp())
+                            .height(constraints.maxHeight.toDp())
+                    }.offsetPx(x = drawerState.offset)
+                        .padding(start = VerticalDrawerPadding)
                 ) {
                     Surface(
                         shape = drawerShape,
@@ -314,8 +310,7 @@ fun DrawerContent(
 fun DrawerModule(module: DebugModule) {
     Column {
         Surface(
-            modifier = Modifier.fillMaxWidth()
-                .height(48.dp),
+            modifier = Modifier.fillMaxWidth().height(48.dp),
             color = DrawerColors.current.onSurface.compositeOverSurface(alpha = 0.12f),
             contentColor = DrawerColors.current.secondary,
         ) {
