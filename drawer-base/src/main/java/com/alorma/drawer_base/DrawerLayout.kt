@@ -1,6 +1,5 @@
 package com.alorma.drawer_base
 
-
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Icon
 import androidx.compose.foundation.Text
@@ -20,6 +19,8 @@ import androidx.compose.ui.platform.DensityAmbient
 import androidx.compose.ui.platform.LayoutDirectionAmbient
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -33,7 +34,7 @@ fun DebugDrawerLayout(
     drawerColors: Colors = drawerColorsPalette,
     drawerModules: @Composable () -> List<DebugModule> = { emptyList() },
     initialDrawerState: DrawerValue = DrawerValue.Closed,
-    moduleModifier: Modifier = Modifier,
+    moduleModifier: Modifier? = null,
     bodyContent: @Composable (DrawerState) -> Unit
 ) {
 
@@ -52,9 +53,8 @@ fun DebugDrawerLayout(
             }
 
             val minValue = constraints.maxWidth.toFloat()
-            val maxValue = 0f
 
-            val anchors = mapOf(minValue to DrawerValue.Closed, maxValue to DrawerValue.Open)
+            val anchors = mapOf(minValue to DrawerValue.Closed, 0f to DrawerValue.Open)
             val isRtl = LayoutDirectionAmbient.current == LayoutDirection.Rtl
 
             Box(
@@ -75,7 +75,7 @@ fun DebugDrawerLayout(
                 Scrim(
                     open = drawerState.isOpen,
                     onClose = { drawerState.close() },
-                    fraction = { calculateFraction(minValue, maxValue, drawerState.offset.value) },
+                    fraction = { calculateFraction(minValue, drawerState.offset.value) },
                     color = DrawerConstants.defaultScrimColor
                 )
                 Box(
@@ -106,7 +106,7 @@ fun DebugDrawerLayout(
 @Composable
 fun DrawerContent(
     drawerModules: @Composable () -> List<DebugModule> = { emptyList() },
-    moduleModifier: Modifier = Modifier,
+    moduleModifier: Modifier? = null,
 ) {
     val items = drawerModules()
     LazyColumnForIndexed(
@@ -126,10 +126,15 @@ fun DrawerContent(
 @Composable
 fun DrawerModule(
     module: DebugModule,
-    modifier: Modifier = Modifier,
+    modifier: Modifier? = null,
 ) {
+    val semanticsModifier = Modifier.semantics {
+        testTag = "Module ${module.tag}"
+    }
+    val moduleModifier = modifier ?: Modifier
+
     Column(
-        modifier = Modifier.fillMaxWidth().then(modifier),
+        modifier = semanticsModifier + Modifier.fillMaxWidth() + moduleModifier,
     ) {
         DrawerModuleHeader(
             module = module,
@@ -139,8 +144,7 @@ fun DrawerModule(
                 .fillMaxWidth()
                 .background(
                     color = DrawerColors.current.onSurface.compositeOverSurface(alpha = 0.08f)
-                )
-                .padding(8.dp),
+                ).padding(8.dp),
         ) {
             module.build()
         }
@@ -151,8 +155,11 @@ fun DrawerModule(
 private fun DrawerModuleHeader(
     module: DebugModule
 ) {
+    val semanticModifier = Modifier.semantics {
+        testTag = "Module header ${module.tag}"
+    }
     Surface(
-        modifier = Modifier.fillMaxWidth().height(48.dp),
+        modifier = semanticModifier + Modifier.fillMaxWidth().height(48.dp),
         color = DrawerColors.current.onSurface.compositeOverSurface(alpha = 0.12f),
         contentColor = DrawerColors.current.secondary,
     ) {
@@ -160,7 +167,7 @@ private fun DrawerModuleHeader(
             modifier = Modifier.padding(8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            DrawerModuleHeaderIcon(module.icon, 32.dp)
+            DrawerModuleHeaderIcon(module, 32.dp)
             Spacer(modifier = Modifier.preferredWidth(8.dp))
             DrawerModuleHeaderText(module)
         }
@@ -171,8 +178,11 @@ private fun DrawerModuleHeader(
 private fun DrawerModuleHeaderText(
     module: DebugModule
 ) {
+    val semanticsModifier = Modifier.semantics {
+        testTag = "Module header text ${module.tag}"
+    }
     Text(
-        modifier = Modifier,
+        modifier = semanticsModifier,
         text = module.title,
         textAlign = TextAlign.Start,
         fontWeight = FontWeight.Bold,
@@ -180,26 +190,30 @@ private fun DrawerModuleHeaderText(
 }
 
 @Composable
-private fun DrawerModuleHeaderIcon(icon: IconType, size: Dp) {
-    val modifier = Modifier.preferredSize(size = size)
-    when (icon) {
+private fun DrawerModuleHeaderIcon(module: DebugModule, size: Dp) {
+
+    val semanticsModifier = Modifier.semantics {
+        testTag = "Module header icon ${module.tag}"
+    }
+    val modifier = semanticsModifier + Modifier.preferredSize(size = size)
+    when (module.icon) {
         is IconType.Vector -> Icon(
             modifier = modifier,
             asset = vectorResource(
-                id = icon.drawableRes
+                id = module.icon.drawableRes
             ),
         )
         is IconType.Image -> Icon(
             modifier = modifier,
             asset = imageResource(
-                id = icon.drawableRes
+                id = module.icon.drawableRes
             ),
         )
     }
 }
 
-private fun calculateFraction(a: Float, b: Float, pos: Float) =
-    ((pos - a) / (b - a)).coerceIn(0f, 1f)
+private fun calculateFraction(a: Float, pos: Float) =
+    ((pos - a) / a).coerceIn(0f, 1f)
 
 @Composable
 private fun Scrim(

@@ -9,6 +9,9 @@ interface DebugModule {
 
     val title: String
 
+    val tag: String
+        get() = this::class.qualifiedName.orEmpty()
+
     @Composable
     fun build()
 }
