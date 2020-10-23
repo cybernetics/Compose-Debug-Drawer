@@ -15,13 +15,3 @@ object Module1 : DebugModule {
         Text(text = "Module 1 content")
     }
 }
-
-object Module2 : DebugModule {
-    override val icon = IconType.Vector(R.drawable.ic_device)
-    override val title: String = "Device"
-
-    @Composable
-    override fun build() {
-        Text(text = "Module 2 content")
-    }
-}
