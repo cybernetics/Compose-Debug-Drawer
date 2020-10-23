@@ -6,23 +6,33 @@ import androidx.compose.animation.core.AnimationClockObservable
 import androidx.compose.animation.core.AnimationEndReason
 import androidx.compose.animation.core.SpringSpec
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Icon
 import androidx.compose.foundation.Text
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumnFor
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Providers
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.savedinstancestate.Saver
 import androidx.compose.runtime.savedinstancestate.rememberSavedInstanceState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.WithConstraints
 import androidx.compose.ui.gesture.scrollorientationlocking.Orientation
 import androidx.compose.ui.gesture.tapGestureFilter
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.AnimationClockAmbient
 import androidx.compose.ui.platform.DensityAmbient
 import androidx.compose.ui.platform.LayoutDirectionAmbient
+import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -167,7 +177,7 @@ fun rememberDrawerState(
 fun DebugDrawerLayout(
     drawerColors: Colors = drawerColorsPalette,
     debug: () -> Boolean = { false },
-    drawerContent: @Composable ColumnScope.() -> Unit = { Text(text = "Esto es el drawer") },
+    drawerModules: () -> List<DebugModule> = { emptyList() },
     modifier: Modifier = Modifier,
     drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed),
     gesturesEnabled: Boolean = true,
@@ -178,7 +188,7 @@ fun DebugDrawerLayout(
     if (debug()) {
         DebugDrawerLayout(
             drawerColors = drawerColors,
-            drawerContent = drawerContent,
+            drawerModules = drawerModules,
             modifier = modifier,
             drawerState = drawerState,
             gesturesEnabled = gesturesEnabled,
@@ -217,7 +227,7 @@ fun DebugDrawerLayout(
 @OptIn(ExperimentalMaterialApi::class)
 fun DebugDrawerLayout(
     drawerColors: Colors = drawerColorsPalette,
-    drawerContent: @Composable ColumnScope.() -> Unit,
+    drawerModules: () -> List<DebugModule> = { emptyList() },
     modifier: Modifier = Modifier,
     drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed),
     gesturesEnabled: Boolean = true,
@@ -225,55 +235,59 @@ fun DebugDrawerLayout(
     drawerElevation: Dp = DrawerConstants.DefaultElevation,
     bodyContent: @Composable () -> Unit
 ) {
-    WithConstraints(modifier.fillMaxSize()) {
-        if (!constraints.hasBoundedWidth) {
-            throw IllegalStateException("Drawer shouldn't have infinite width")
-        }
-
-        val minValue = constraints.maxWidth.toFloat()
-        val maxValue = VerticalDrawerPadding.value
-
-        val anchors = mapOf(minValue to DrawerValue.Closed, maxValue to DrawerValue.Open)
-        val isRtl = LayoutDirectionAmbient.current == LayoutDirection.Rtl
-        Box(
-            Modifier.swipeable(
-                state = drawerState,
-                anchors = anchors,
-                thresholds = { _, _ -> FractionalThreshold(0.5f) },
-                orientation = Orientation.Horizontal,
-                enabled = gesturesEnabled,
-                reverseDirection = isRtl,
-                velocityThreshold = DrawerVelocityThreshold,
-                resistance = null
-            )
-        ) {
-            Box {
-                bodyContent()
+    Providers(
+        DrawerColors provides drawerColors
+    ) {
+        WithConstraints(modifier.fillMaxSize()) {
+            if (!constraints.hasBoundedWidth) {
+                throw IllegalStateException("Drawer shouldn't have infinite width")
             }
-            Scrim(
-                open = drawerState.isOpen,
-                onClose = { drawerState.close() },
-                fraction = { calculateFraction(minValue, maxValue, drawerState.offset.value) },
-                color = DrawerConstants.defaultScrimColor
-            )
 
+            val minValue = constraints.maxWidth.toFloat()
+            val maxValue = VerticalDrawerPadding.value
+
+            val anchors = mapOf(minValue to DrawerValue.Closed, maxValue to DrawerValue.Open)
+            val isRtl = LayoutDirectionAmbient.current == LayoutDirection.Rtl
             Box(
-                modifier = with(DensityAmbient.current) {
-                    Modifier.preferredSizeIn(
-                        minWidth = constraints.minWidth.toDp(),
-                        minHeight = constraints.minHeight.toDp(),
-                        maxWidth = constraints.maxWidth.toDp(),
-                        maxHeight = constraints.maxHeight.toDp()
-                    )
-                }.offsetPx(x = drawerState.offset).padding(start = VerticalDrawerPadding)
+                Modifier.swipeable(
+                    state = drawerState,
+                    anchors = anchors,
+                    thresholds = { _, _ -> FractionalThreshold(0.5f) },
+                    orientation = Orientation.Horizontal,
+                    enabled = gesturesEnabled,
+                    reverseDirection = isRtl,
+                    velocityThreshold = DrawerVelocityThreshold,
+                    resistance = null
+                )
             ) {
-                Surface(
-                    shape = drawerShape,
-                    color = drawerColors.background,
-                    contentColor = drawerColors.onBackground,
-                    elevation = drawerElevation
+                Box {
+                    bodyContent()
+                }
+                Scrim(
+                    open = drawerState.isOpen,
+                    onClose = { drawerState.close() },
+                    fraction = { calculateFraction(minValue, maxValue, drawerState.offset.value) },
+                    color = DrawerConstants.defaultScrimColor
+                )
+
+                Box(
+                    modifier = with(DensityAmbient.current) {
+                        Modifier.preferredSizeIn(
+                            minWidth = constraints.minWidth.toDp(),
+                            minHeight = constraints.minHeight.toDp(),
+                            maxWidth = constraints.maxWidth.toDp(),
+                            maxHeight = constraints.maxHeight.toDp()
+                        )
+                    }.offsetPx(x = drawerState.offset).padding(start = VerticalDrawerPadding)
                 ) {
-                    DrawerContent(drawerContent)
+                    Surface(
+                        shape = drawerShape,
+                        color = DrawerColors.current.background,
+                        contentColor = DrawerColors.current.onSurface,
+                        elevation = drawerElevation
+                    ) {
+                        DrawerContent(drawerModules)
+                    }
                 }
             }
         }
@@ -281,10 +295,61 @@ fun DebugDrawerLayout(
 }
 
 @Composable
+private fun Color.compositeOverSurface(): Color = compositeOver(DrawerColors.current.surface)
+
+@Composable
 fun DrawerContent(
-    drawerContent: @Composable ColumnScope.() -> Unit
+    drawerModules: () -> List<DebugModule> = { emptyList() },
 ) {
-    Column(Modifier.fillMaxSize(), children = drawerContent)
+    LazyColumnFor(
+        modifier = Modifier.fillMaxSize(),
+        items = drawerModules()
+    ) { module ->
+        DrawerModule(module)
+    }
+}
+
+@Composable
+fun DrawerModule(module: DebugModule) {
+    Column {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp)
+                .background(DrawerColors.current.primary.copy(alpha = 0.30f).compositeOverSurface())
+                .padding(8.dp),
+        ) {
+            DrawerHeaderIcon(module.icon, 32.dp)
+            Spacer(modifier = Modifier.preferredWidth(8.dp))
+            Text(
+                modifier = Modifier,
+                text = module.title,
+                textAlign = TextAlign.Start,
+                fontWeight = FontWeight.Bold,
+            )
+        }
+        module.build()
+    }
+}
+
+@Composable
+private fun DrawerHeaderIcon(icon: IconType, size: Dp) {
+    val modifier = Modifier.preferredSize(size = size)
+    when (icon) {
+        is IconType.Vector -> Icon(
+            modifier = modifier,
+            asset = vectorResource(
+                id = icon.drawableRes
+            ),
+        )
+        is IconType.Image -> Icon(
+            modifier = modifier,
+            asset = imageResource(
+                id = icon.drawableRes
+            ),
+        )
+    }
 }
 
 /**

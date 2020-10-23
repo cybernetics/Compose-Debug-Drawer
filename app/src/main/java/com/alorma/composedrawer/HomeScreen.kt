@@ -8,6 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.ui.tooling.preview.Preview
+import com.alorma.composedrawer.modules.Module1
+import com.alorma.composedrawer.modules.Module2
 import com.alorma.composedrawer.ui.ComposeDrawerTheme
 import com.alorma.drawer_base.DebugDrawerLayout
 import com.alorma.drawer_base.DrawerValue
@@ -17,7 +19,13 @@ import com.alorma.drawer_base.rememberDrawerState
 fun HomeScreen() {
     DebugDrawerLayout(
         debug = { BuildConfig.DEBUG },
-        drawerState = rememberDrawerState(DrawerValue.Open)
+        drawerState = rememberDrawerState(DrawerValue.Open),
+        drawerModules = {
+            listOf(
+                Module1,
+                Module2,
+            )
+        }
     ) {
         Scaffold(
             topBar = {
