@@ -16,6 +16,7 @@ import androidx.ui.tooling.preview.Preview
 import com.alorma.composedrawer.modules.DemoActionsModule
 import com.alorma.composedrawer.ui.ComposeDrawerTheme
 import com.alorma.drawer_base.DebugDrawerLayout
+import com.alorma.drawer_modules.BuildModule
 import com.alorma.drawer_modules.DeviceModule
 
 @Composable
@@ -26,6 +27,7 @@ fun HomeScreen() {
         drawerModules = {
             listOf(
                 DemoActionsModule(),
+                BuildModule(),
                 DeviceModule(),
             )
         }

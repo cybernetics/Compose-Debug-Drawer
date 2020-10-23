@@ -1,7 +1,6 @@
 package com.alorma.drawer_modules
 
 import android.os.Build
-import android.util.DisplayMetrics
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.AmbientEmphasisLevels
@@ -18,32 +17,29 @@ import com.alorma.drawer_base.IconType
 import com.alorma.drawer_base.compositeOverSurface
 
 @Composable
-fun DeviceModule() = object : DebugModule {
-    override val icon = IconType.Vector(R.drawable.ic_compose_drawer_device)
-    override val title: String = "Device Information"
+fun BuildModule() = object : DebugModule {
+    override val icon = IconType.Vector(R.drawable.ic_compose_drawer_adb)
+    override val title: String = "Build information"
 
     @Composable
     override fun build() {
         val context = ContextAmbient.current
 
-        val displayMetrics = context.resources.displayMetrics
-        val densityBucket = getDensityString(displayMetrics)
+        val info = context.packageManager.getPackageInfo(context.packageName, 0)
 
-        val deviceMake = "Make" to Build.MANUFACTURER
-        val deviceModel = "Device" to Build.MODEL
-        val deviceResolution =
-            "Resolution" to "${displayMetrics.heightPixels}x${displayMetrics.widthPixels}"
-        val deviceDensity = "Density" to "${displayMetrics.densityDpi}dpi ($densityBucket)"
-        val deviceRelease = "Release" to Build.VERSION.RELEASE
-        val deviceApi = "API" to Build.VERSION.SDK_INT.toString()
+        val infoVersion = "Version" to
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    info.longVersionCode.toString()
+                } else {
+                    info.versionCode.toString()
+                }
+        val infoName = "Name" to info.versionName
+        val infoPackage = "Package" to info.packageName
 
         val items = listOf(
-            deviceMake,
-            deviceModel,
-            deviceResolution,
-            deviceDensity,
-            deviceRelease,
-            deviceApi
+            infoVersion,
+            infoName,
+            infoPackage
         )
 
         Column {
@@ -68,19 +64,6 @@ fun DeviceModule() = object : DebugModule {
                     Spacer(modifier = Modifier.preferredHeight(4.dp))
                 }
             }
-        }
-    }
-
-    private fun getDensityString(displayMetrics: DisplayMetrics): String {
-        return when (displayMetrics.densityDpi) {
-            DisplayMetrics.DENSITY_LOW -> "ldpi"
-            DisplayMetrics.DENSITY_MEDIUM -> "mdpi"
-            DisplayMetrics.DENSITY_HIGH -> "hdpi"
-            DisplayMetrics.DENSITY_XHIGH -> "xhdpi"
-            DisplayMetrics.DENSITY_XXHIGH -> "xxhdpi"
-            DisplayMetrics.DENSITY_XXXHIGH -> "xxxhdpi"
-            DisplayMetrics.DENSITY_TV -> "tvdpi"
-            else -> displayMetrics.densityDpi.toString()
         }
     }
 }
