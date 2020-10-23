@@ -1,6 +1,6 @@
 # ComposeDrawer
 
-![drawer-v0 0 1-alpha-01](art/drawer-v0.0.1-alpha-01.png)
+<img width="250" src="art/drawer-v0.0.1-alpha-01.png" />
 
 ## Install
 
