@@ -2,7 +2,7 @@
 
 Composable Debug Drawer for Jetpack Compose apps
 
-<img width="250" src="art/drawer-v0.0.1-alpha-01.png" />
+<img width="250" src="art/drawer-v0.0.1-alpha-02.png" />
 
 ## Install
 
@@ -20,15 +20,15 @@ allprojects {
 Add dependencies:
 
 ```gradle
-implementation 'com.github.alorma.ComposeDrawer:drawer-base:v0.0.1-alpha-01'
-implementation 'com.github.alorma.ComposeDrawer:drawer-modules:v0.0.1-alpha-01'
+implementation 'com.github.alorma.ComposeDrawer:drawer-base:0.0.1-alpha-02'
+implementation 'com.github.alorma.ComposeDrawer:drawer-modules:0.0.1-alpha-02'
 ```
 
 ## Setup
 
 Wrap your content with `DebugDrawerLayout`:
 
-```gradle {
+```kotlin
 DebugDrawerLayout(
   debug = { BuildConfig.DEBUG },
   drawerModules = {
@@ -39,7 +39,16 @@ DebugDrawerLayout(
 
 ## Modules
 
-> This library does not provide any usable module yet.
+> This library does provides only DeviceModule yet.
+
+```kotlin
+DebugDrawerLayout(
+  debug = { BuildConfig.DEBUG },
+  drawerModules = {
+    listOf(DeviceModule())
+  }
+)
+```
 
 You can create your own module by creating a class that extends: `DrawerModule`
 
