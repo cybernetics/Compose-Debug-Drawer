@@ -15,24 +15,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.ContextAmbient
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.alorma.drawer_base.DebugModule
 import com.alorma.drawer_base.DrawerColors
 import com.alorma.drawer_base.IconType
 
-open class ActionsModule(
-    override val icon: IconType,
-    override val title: String,
-    private val actions: List<DebugDrawerAction>
-) : DebugModule {
+@Composable
+fun ActionsModule(
+    icon: IconType,
+    title: String,
+    actions: @Composable ColumnScope.() -> List<DebugDrawerAction>
+) = object : DebugModule {
+
+    override val icon: IconType = icon
+    override val title: String = title
 
     @Composable
     override fun build() {
-        ContextAmbient
         Column {
-            actions.forEachIndexed { index, action ->
+            val actionItems = actions()
+            actionItems.forEachIndexed { index, action ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
@@ -40,7 +43,7 @@ open class ActionsModule(
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
-                if (index < actions.size - 1) {
+                if (index < actionItems.size - 1) {
                     Spacer(modifier = Modifier.preferredHeight(8.dp))
                 }
             }
@@ -48,20 +51,22 @@ open class ActionsModule(
     }
 }
 
-sealed class DebugDrawerAction {
+abstract class DebugDrawerAction {
     @Composable
     abstract fun build(modifier: Modifier)
 }
 
-data class ButtonAction(
-    val text: String,
-    val onClick: () -> Unit
-) : DebugDrawerAction() {
+@Composable
+fun ButtonAction(
+    text: String,
+    extraModifier: Modifier = Modifier,
+    onClick: () -> Unit
+) = object : DebugDrawerAction() {
 
     @Composable
     override fun build(modifier: Modifier) {
         Button(
-            modifier = modifier,
+            modifier = modifier.then(extraModifier),
             backgroundColor = DrawerColors.current.primary,
             contentColor = DrawerColors.current.onPrimary,
             onClick = onClick,
@@ -70,25 +75,30 @@ data class ButtonAction(
     }
 }
 
-data class SwitchAction(
-    val text: String,
-    val isChecked: Boolean,
-    val state: MutableState<Boolean> = mutableStateOf(isChecked),
-    val onChange: (checked: Boolean) -> Unit,
-) : DebugDrawerAction() {
+@Composable
+fun SwitchAction(
+    text: String,
+    isChecked: Boolean,
+    extraModifier: Modifier = Modifier.border(
+        border = BorderStroke(width = 1.dp, color = DrawerColors.current.primary),
+        shape = MaterialTheme.shapes.medium
+    ),
+    onChange: (checked: Boolean) -> Unit,
+) = object : DebugDrawerAction() {
 
     @Composable
     override fun build(modifier: Modifier) {
+        fun onSwitchChange(checkedState: MutableState<Boolean>, checked: Boolean) {
+            checkedState.value = checked
+            onChange(checkedState.value)
+        }
+
         val checkedStateX: MutableState<Boolean> = remember { mutableStateOf(isChecked) }
 
         Row(
-            modifier = modifier
-                .preferredHeight(36.dp)
+            modifier = modifier.preferredHeight(36.dp)
                 .clip(shape = MaterialTheme.shapes.medium)
-                .border(
-                    border = BorderStroke(width = 1.dp, color = DrawerColors.current.primary),
-                    shape = MaterialTheme.shapes.medium
-                )
+                .then(extraModifier)
                 .clickable(onClick = {
                     onSwitchChange(
                         checkedState = checkedStateX,
@@ -118,8 +128,4 @@ data class SwitchAction(
         }
     }
 
-    private fun onSwitchChange(checkedState: MutableState<Boolean>, checked: Boolean) {
-        checkedState.value = checked
-        onChange(checkedState.value)
-    }
 }

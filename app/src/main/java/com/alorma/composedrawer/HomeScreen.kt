@@ -10,7 +10,6 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ContextAmbient
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.ui.tooling.preview.Preview
@@ -26,9 +25,7 @@ fun HomeScreen() {
         initialDrawerState = DrawerValue.Open,
         drawerModules = {
             listOf(
-                DemoActionsModule(
-                    ContextAmbient.current
-                ),
+                DemoActionsModule(),
                 DeviceModule(),
             )
         }
