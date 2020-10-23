@@ -17,7 +17,8 @@ import com.alorma.drawer_base.DrawerColors
 import com.alorma.drawer_base.IconType
 import com.alorma.drawer_base.compositeOverSurface
 
-class DeviceModule : DebugModule {
+@Composable
+fun DeviceModule() = object : DebugModule {
     override val icon = IconType.Vector(R.drawable.ic_compose_drawer_device)
     override val title: String = "Device"
 
