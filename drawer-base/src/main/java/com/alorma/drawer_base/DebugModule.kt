@@ -10,7 +10,7 @@ interface DebugModule {
     val title: String
 
     val tag: String
-        get() = this::class.qualifiedName.orEmpty()
+        get() = this::class.java.name.orEmpty()
 
     @Composable
     fun build()

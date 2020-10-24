@@ -15,6 +15,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.alorma.drawer_base.DebugModule
@@ -25,7 +27,7 @@ import com.alorma.drawer_base.IconType
 fun ActionsModule(
     icon: IconType,
     title: String,
-    actions: @Composable ColumnScope.() -> List<DebugDrawerAction>
+    actions: @Composable () -> List<DebugDrawerAction>
 ) = object : DebugModule {
 
     override val icon: IconType = icon
@@ -39,8 +41,11 @@ fun ActionsModule(
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
+                    val actionsSemanticModifier = Modifier.semantics {
+                        testTag = "Action ${action.tag}"
+                    }
                     action.build(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth() + actionsSemanticModifier
                     )
                 }
                 if (index < actionItems.size - 1) {
@@ -52,6 +57,9 @@ fun ActionsModule(
 }
 
 abstract class DebugDrawerAction {
+    open val tag: String
+        get() = this::class.java.name.orEmpty()
+
     @Composable
     abstract fun build(modifier: Modifier)
 }
@@ -59,14 +67,18 @@ abstract class DebugDrawerAction {
 @Composable
 fun ButtonAction(
     text: String,
+    tag: String? = null,
     extraModifier: Modifier = Modifier,
     onClick: () -> Unit
 ) = object : DebugDrawerAction() {
 
+    override val tag: String
+        get() = tag ?: super.tag
+
     @Composable
     override fun build(modifier: Modifier) {
         Button(
-            modifier = modifier.then(extraModifier),
+            modifier = modifier + extraModifier,
             backgroundColor = DrawerColors.current.primary,
             contentColor = DrawerColors.current.onPrimary,
             onClick = onClick,
@@ -78,6 +90,7 @@ fun ButtonAction(
 @Composable
 fun SwitchAction(
     text: String,
+    tag: String? = null,
     isChecked: Boolean,
     extraModifier: Modifier = Modifier.border(
         border = BorderStroke(width = 1.dp, color = DrawerColors.current.primary),
@@ -85,6 +98,9 @@ fun SwitchAction(
     ),
     onChange: (checked: Boolean) -> Unit,
 ) = object : DebugDrawerAction() {
+
+    override val tag: String
+        get() = tag ?: super.tag
 
     @Composable
     override fun build(modifier: Modifier) {
@@ -108,14 +124,22 @@ fun SwitchAction(
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            val actionTextSemanticModifier = Modifier.semantics {
+                testTag = "Action $tag text"
+            }
             Text(
+                modifier = actionTextSemanticModifier,
                 text = text,
                 textAlign = TextAlign.Start,
             )
             Spacer(
                 modifier = Modifier.fillMaxHeight().weight(1f)
             )
+            val actionSwitchSemanticModifier = Modifier.semantics {
+                testTag = "Action $tag switch"
+            }
             Switch(
+                modifier = actionSwitchSemanticModifier,
                 color = DrawerColors.current.primary,
                 checked = checkedState.value,
                 onCheckedChange = { checked ->

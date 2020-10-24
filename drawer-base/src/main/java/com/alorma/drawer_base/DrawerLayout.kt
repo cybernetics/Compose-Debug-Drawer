@@ -81,8 +81,8 @@ fun DebugDrawerLayout(
                         elevation = DrawerConstants.DefaultElevation
                     ) {
                         DrawerContent(
-                            drawerModules = drawerModules,
                             moduleModifier = moduleModifier,
+                            drawerModules = drawerModules,
                         )
                     }
                 }

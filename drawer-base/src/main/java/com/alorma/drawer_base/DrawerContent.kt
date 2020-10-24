@@ -10,8 +10,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun DrawerContent(
-    drawerModules: @Composable () -> List<DebugModule> = { emptyList() },
     moduleModifier: Modifier? = null,
+    drawerModules: @Composable () -> List<DebugModule> = { emptyList() },
 ) {
     val items = drawerModules()
     LazyColumnForIndexed(
