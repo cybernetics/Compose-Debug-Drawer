@@ -6,7 +6,7 @@ import androidx.compose.ui.graphics.Color
 val blue200 = Color(0xFF72E8F3)
 val blue400 = Color(0xFF00D5EA)
 val pink200 = Color(0xFFF9B1F0)
-val gray = Color(0xFF121212)
+val gray = Color(0xFF2D3133)
 val black = Color(0xFF000000)
 
 val drawerColorsPalette = darkColors(
