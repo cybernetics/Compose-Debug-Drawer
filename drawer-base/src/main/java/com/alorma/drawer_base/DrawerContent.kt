@@ -1,12 +1,10 @@
 package com.alorma.drawer_base
 
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.preferredHeight
 import androidx.compose.foundation.lazy.LazyColumnForIndexed
+import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 
 @Composable
 fun DrawerContent(
@@ -24,8 +22,8 @@ fun DrawerContent(
             modifier = moduleModifier,
             initialModulesState = initialModulesState
         )
-        if (index < items.size + 1) {
-            Spacer(modifier = Modifier.preferredHeight(8.dp))
+        if (index < items.size - 1) {
+            Divider(color = DrawerColors.current.onSurface.compositeOverSurface(0.38f))
         }
     }
 }
