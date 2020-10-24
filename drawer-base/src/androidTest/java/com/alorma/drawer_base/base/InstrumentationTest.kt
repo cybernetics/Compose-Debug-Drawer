@@ -1,10 +1,11 @@
-package com.alorma.drawer_base
+package com.alorma.drawer_base.base
 
 import androidx.ui.test.createComposeRule
 import org.junit.Rule
 
-interface InstrumentationTest {
+abstract class InstrumentationTest {
+
     @get:Rule
-    val composeTestRule
-        get() = createComposeRule()
+    val composeTestRule = createComposeRule()
+
 }

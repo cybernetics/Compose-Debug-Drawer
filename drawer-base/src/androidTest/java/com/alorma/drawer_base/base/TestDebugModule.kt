@@ -1,7 +1,10 @@
-package com.alorma.drawer_base
+package com.alorma.drawer_base.base
 
 import androidx.compose.foundation.Text
 import androidx.compose.runtime.Composable
+import com.alorma.drawer_base.DebugModule
+import com.alorma.drawer_base.IconType
+import com.alorma.drawer_base.R
 import java.util.*
 
 class TestDebugModule(

@@ -2,6 +2,7 @@ package com.alorma.drawer_base
 
 import androidx.compose.foundation.Icon
 import androidx.compose.foundation.Text
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
@@ -18,13 +19,18 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun DrawerModuleHeader(
-    module: DebugModule
+    module: DebugModule,
+    onClick: () -> Unit
 ) {
-    val semanticModifier = Modifier.semantics {
-        testTag = "Module header ${module.tag}"
-    }
+    val semanticModifier = Modifier
+        .clickable(onClick = onClick)
+        .semantics {
+            testTag = "Module header ${module.tag}"
+        }
     Surface(
-        modifier = semanticModifier + Modifier.fillMaxWidth().height(48.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(48.dp) + semanticModifier,
         color = DrawerColors.current.onSurface.compositeOverSurface(alpha = 0.12f),
         contentColor = DrawerColors.current.secondary,
     ) {

@@ -93,7 +93,7 @@ fun SwitchAction(
             onChange(checkedState.value)
         }
 
-        val checkedStateX: MutableState<Boolean> = remember { mutableStateOf(isChecked) }
+        val checkedState: MutableState<Boolean> = remember { mutableStateOf(isChecked) }
 
         Row(
             modifier = modifier.preferredHeight(36.dp)
@@ -101,8 +101,8 @@ fun SwitchAction(
                 .then(extraModifier)
                 .clickable(onClick = {
                     onSwitchChange(
-                        checkedState = checkedStateX,
-                        checked = !checkedStateX.value
+                        checkedState = checkedState,
+                        checked = !checkedState.value
                     )
                 })
                 .padding(8.dp),
@@ -117,10 +117,10 @@ fun SwitchAction(
             )
             Switch(
                 color = DrawerColors.current.primary,
-                checked = checkedStateX.value,
+                checked = checkedState.value,
                 onCheckedChange = { checked ->
                     onSwitchChange(
-                        checkedState = checkedStateX,
+                        checkedState = checkedState,
                         checked = checked
                     )
                 },
