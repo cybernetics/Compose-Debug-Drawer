@@ -2,16 +2,15 @@ package com.alorma.drawer_modules
 
 import androidx.ui.test.*
 import com.alorma.drawer_modules.base.InstrumentationTest
-import com.alorma.drawer_modules.base.printLog
-import com.alorma.drawer_modules.base.setModuleContent
+import com.alorma.drawer_modules.base.setActionContent
 import org.junit.Test
 
 class ButtonActionTest : InstrumentationTest() {
 
     @Test
-    fun test_switch_action() {
+    fun test_button_action() {
         var clickedTimes = 0
-        setModuleContent {
+        setActionContent {
             ButtonAction(
                 text = "Button test",
                 tag = "Test",

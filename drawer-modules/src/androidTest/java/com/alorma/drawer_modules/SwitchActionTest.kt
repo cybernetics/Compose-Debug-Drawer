@@ -2,8 +2,7 @@ package com.alorma.drawer_modules
 
 import androidx.ui.test.*
 import com.alorma.drawer_modules.base.InstrumentationTest
-import com.alorma.drawer_modules.base.printLog
-import com.alorma.drawer_modules.base.setModuleContent
+import com.alorma.drawer_modules.base.setActionContent
 import org.junit.Test
 
 class SwitchActionTest : InstrumentationTest() {
@@ -11,7 +10,7 @@ class SwitchActionTest : InstrumentationTest() {
     @Test
     fun test_switch_action() {
         var isChecked = true
-        setModuleContent {
+        setActionContent {
             SwitchAction(
                 text = "Switch test",
                 tag = "Test",

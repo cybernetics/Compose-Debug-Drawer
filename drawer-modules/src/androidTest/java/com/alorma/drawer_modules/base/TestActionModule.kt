@@ -8,8 +8,8 @@ import com.alorma.drawer_modules.R
 import java.util.*
 
 @Composable
-fun TestActionModule(action: @Composable () -> DebugDrawerAction) = ActionsModule(
+fun TestActionModule(action: @Composable () -> List<DebugDrawerAction>) = ActionsModule(
     icon = IconType.Vector(drawableRes = R.drawable.ic_baseline_adb_24),
     title = "Action test",
-    actions = { listOf(action()) }
+    actions = { action() }
 )
