@@ -9,16 +9,10 @@ import com.alorma.drawer_base.DrawerContent
 import com.alorma.drawer_modules.DebugDrawerAction
 
 fun InstrumentationTest.setActionContent(content: @Composable () -> DebugDrawerAction) {
-    composeTestRule.setContent {
-        MaterialTheme {
-            DrawerContent {
-                listOf(TestActionModule(action = { listOf(content()) }))
-            }
-        }
-    }
+    setActionsContent(content = { listOf(content()) })
 }
 
-fun InstrumentationTest.setModuleContent(content: @Composable () -> List<DebugDrawerAction>) {
+fun InstrumentationTest.setActionsContent(content: @Composable () -> List<DebugDrawerAction>) {
     composeTestRule.setContent {
         MaterialTheme {
             DrawerContent {

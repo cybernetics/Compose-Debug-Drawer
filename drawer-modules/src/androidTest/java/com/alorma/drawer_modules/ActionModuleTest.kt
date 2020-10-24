@@ -2,7 +2,7 @@ package com.alorma.drawer_modules
 
 import androidx.ui.test.*
 import com.alorma.drawer_modules.base.InstrumentationTest
-import com.alorma.drawer_modules.base.setModuleContent
+import com.alorma.drawer_modules.base.setActionsContent
 import org.junit.Test
 
 class ActionModuleTest : InstrumentationTest() {
@@ -11,7 +11,7 @@ class ActionModuleTest : InstrumentationTest() {
     fun test_action_module() {
         var clickedTimes = 0
         var isChecked = true
-        setModuleContent {
+        setActionsContent {
             listOf(
                 ButtonAction(
                     text = "Button test",
