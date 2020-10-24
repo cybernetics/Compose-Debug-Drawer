@@ -20,8 +20,8 @@ allprojects {
 Add dependencies:
 
 ```gradle
-implementation 'com.github.alorma.ComposeDrawer:drawer-base:0.0.1-alpha-06'
-implementation 'com.github.alorma.ComposeDrawer:drawer-modules:0.0.1-alpha-06'
+implementation 'com.github.alorma.ComposeDrawer:drawer-base:0.1.0-beta-01'
+implementation 'com.github.alorma.ComposeDrawer:drawer-modules:0.1.0-beta-01'
 ```
 
 ## Setup
