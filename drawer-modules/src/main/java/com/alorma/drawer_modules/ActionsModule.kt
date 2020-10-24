@@ -90,8 +90,8 @@ fun ButtonAction(
 @Composable
 fun SwitchAction(
     text: String,
-    tag: String? = null,
     isChecked: Boolean,
+    tag: String? = null,
     extraModifier: Modifier = Modifier.border(
         border = BorderStroke(width = 1.dp, color = DrawerColors.current.primary),
         shape = MaterialTheme.shapes.medium
