@@ -16,3 +16,11 @@ fun TestTheme(content: @Composable() () -> Unit) {
 fun ComposeTestRule.printLog(tag: String = "ComposeDrawer") {
     onRoot(useUnmergedTree = true).printToLog(tag = tag)
 }
+@Composable
+fun createDebugDrawer(
+    modules: List<DebugModule>
+) {
+    DrawerContent(
+        drawerModules = { modules }
+    )
+}
