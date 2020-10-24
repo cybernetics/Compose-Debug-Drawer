@@ -22,6 +22,7 @@ fun DebugDrawerLayout(
     drawerColors: Colors = drawerColorsPalette,
     drawerModules: @Composable () -> List<DebugModule> = { emptyList() },
     initialDrawerState: DrawerValue = DrawerValue.Closed,
+    initialModulesState: ModuleExpandedState = ModuleExpandedState.EXPANDED,
     moduleModifier: Modifier? = null,
     bodyContent: @Composable (DrawerState) -> Unit
 ) {
@@ -83,6 +84,7 @@ fun DebugDrawerLayout(
                         DrawerContent(
                             moduleModifier = moduleModifier,
                             drawerModules = drawerModules,
+                            initialModulesState = initialModulesState
                         )
                     }
                 }

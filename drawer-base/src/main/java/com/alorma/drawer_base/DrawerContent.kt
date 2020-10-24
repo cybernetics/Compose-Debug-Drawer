@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun DrawerContent(
     moduleModifier: Modifier? = null,
+    initialModulesState: ModuleExpandedState = ModuleExpandedState.EXPANDED,
     drawerModules: @Composable () -> List<DebugModule> = { emptyList() },
 ) {
     val items = drawerModules()
@@ -21,6 +22,7 @@ fun DrawerContent(
         DrawerModule(
             module = module,
             modifier = moduleModifier,
+            initialModulesState = initialModulesState
         )
         if (index < items.size + 1) {
             Spacer(modifier = Modifier.preferredHeight(8.dp))

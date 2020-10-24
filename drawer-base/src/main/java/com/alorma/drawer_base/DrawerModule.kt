@@ -18,10 +18,10 @@ import androidx.compose.ui.unit.dp
 fun DrawerModule(
     module: DebugModule,
     modifier: Modifier? = null,
-    initialExpandedState: ModuleExpandedState = ModuleExpandedState.EXPANDED
+    initialModulesState: ModuleExpandedState = ModuleExpandedState.EXPANDED
 ) {
     val expandedState: MutableState<ModuleExpandedState> = remember {
-        mutableStateOf(initialExpandedState)
+        mutableStateOf(initialModulesState)
     }
 
     val semanticsModifier = Modifier.semantics {

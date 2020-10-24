@@ -13,6 +13,7 @@ import androidx.ui.tooling.preview.Preview
 import com.alorma.composedrawer.modules.DemoActionsModule
 import com.alorma.composedrawer.ui.ComposeDrawerTheme
 import com.alorma.drawer_base.DebugDrawerLayout
+import com.alorma.drawer_base.ModuleExpandedState
 import com.alorma.drawer_modules.BuildModule
 import com.alorma.drawer_modules.DeviceModule
 
@@ -21,6 +22,7 @@ fun HomeScreen() {
     DebugDrawerLayout(
         isDebug = { BuildConfig.DEBUG },
         initialDrawerState = DrawerValue.Open,
+        initialModulesState = ModuleExpandedState.COLLAPSED,
         drawerModules = {
             listOf(
                 DemoActionsModule(),
