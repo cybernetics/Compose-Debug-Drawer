@@ -6,18 +6,17 @@ import com.alorma.drawer_modules.base.printLog
 import com.alorma.drawer_modules.base.setModuleContent
 import org.junit.Test
 
-class SwitchActionTest : InstrumentationTest() {
+class ButtonActionTest : InstrumentationTest() {
 
     @Test
     fun test_switch_action() {
-        var isChecked = true
+        var clickedTimes = 0
         setModuleContent {
-            SwitchAction(
-                text = "Switch test",
+            ButtonAction(
+                text = "Button test",
                 tag = "Test",
-                isChecked = isChecked,
-                onChange = { checked ->
-                    isChecked = checked
+                onClick = {
+                    clickedTimes += 1
                 }
             )
         }
@@ -26,13 +25,12 @@ class SwitchActionTest : InstrumentationTest() {
             .assertIsDisplayed()
             .assertHasClickAction()
             .performClick()
+            .performClick()
+            .performClick()
 
-        assert(!isChecked)
+        assert(clickedTimes == 3)
 
-        composeTestRule.onNodeWithTag("Action Test switch")
-            .assertIsDisplayed()
-
-        composeTestRule.onNodeWithText("Switch test")
+        composeTestRule.onNodeWithText("Button test")
             .assertIsDisplayed()
     }
 }
