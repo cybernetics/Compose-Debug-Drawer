@@ -23,7 +23,7 @@ fun DrawerContent(
             initialModulesState = initialModulesState
         )
         if (index < items.size - 1) {
-            Divider(color = DrawerColors.current.onSurface.compositeOverSurface(0.38f))
+            Divider(color = DrawerColors.current.onSurface.compositeOverSurface(0.30f))
         }
     }
 }

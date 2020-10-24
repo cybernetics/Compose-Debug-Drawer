@@ -14,6 +14,6 @@ val drawerColorsPalette = darkColors(
     onPrimary = black,
     primaryVariant = blue400,
     secondary = pink200,
-    background = black,
+    background = gray,
     surface = gray,
 )

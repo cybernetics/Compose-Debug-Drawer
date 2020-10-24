@@ -31,7 +31,7 @@ fun DrawerModuleHeader(
         modifier = Modifier
             .fillMaxWidth()
             .height(48.dp) + semanticModifier,
-        color = DrawerColors.current.onSurface.compositeOverSurface(alpha = 0.12f),
+        color = DrawerColors.current.surface,
         contentColor = DrawerColors.current.secondary,
     ) {
         Row(

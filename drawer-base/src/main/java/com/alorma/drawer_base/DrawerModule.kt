@@ -45,9 +45,7 @@ fun DrawerModule(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(
-                        color = DrawerColors.current.onSurface.compositeOverSurface(alpha = 0.08f)
-                    ).padding(8.dp) + contentSemanticsModifier,
+                    .padding(8.dp) + contentSemanticsModifier,
             ) {
                 module.build()
             }

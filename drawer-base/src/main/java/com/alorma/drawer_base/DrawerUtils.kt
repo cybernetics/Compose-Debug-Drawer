@@ -9,5 +9,8 @@ val DrawerColors = ambientOf { drawerColorsPalette }
 
 @Composable
 fun Color.compositeOverSurface(alpha: Float = 1f): Color {
+    if (this == DrawerColors.current.surface) {
+        return this
+    }
     return copy(alpha = alpha).compositeOver(DrawerColors.current.surface)
 }
