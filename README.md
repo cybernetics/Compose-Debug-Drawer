@@ -2,7 +2,7 @@
 
 Composable Debug Drawer for Jetpack Compose apps
 
-<img width="250" src="art/drawer-v0.0.1-alpha-04.png" />
+<img width="250" src="art/drawer-v0.1.0-beta-02.png" />
 
 ## Install
 
