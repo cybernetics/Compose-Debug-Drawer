@@ -9,7 +9,7 @@ import java.util.*
 
 @Composable
 fun TestActionModule(action: @Composable () -> List<DebugDrawerAction>) = ActionsModule(
-    icon = IconType.Vector(drawableRes = R.drawable.ic_baseline_adb_24),
+    icon = IconType.Vector(drawableRes = R.drawable.ic_baseline_adb),
     title = "Action test",
     actions = { action() }
 )

@@ -9,6 +9,7 @@ import com.alorma.drawer_base.IconType
 import com.alorma.drawer_modules.ActionsModule
 import com.alorma.drawer_modules.ButtonAction
 import com.alorma.drawer_modules.SwitchAction
+import com.alorma.firebase_modules.FirebaseModule
 
 @Composable
 fun DemoActionsModule(): DebugModule {
