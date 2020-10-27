@@ -22,6 +22,10 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven {
+            url "https://jitpack.io"
+            content { includeGroupByRegex "com\\.github.*" }
+        }
     }
 }
 

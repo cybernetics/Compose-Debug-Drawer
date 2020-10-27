@@ -1,25 +1,55 @@
 package com.alorma.developer_shortcuts
 
+import android.content.Intent
+import android.os.Build
+import android.provider.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.ContextAmbient
 import com.alorma.drawer_base.DebugModule
 import com.alorma.drawer_base.IconType
 import com.alorma.drawer_modules.ActionsModule
 import com.alorma.drawer_modules.ButtonAction
+import com.chuckerteam.chucker.api.Chucker
+import leakcanary.LeakCanary
 
 @Composable
 fun ShortcutsModule(): DebugModule {
+    val context = ContextAmbient.current
     val actions = listOfNotNull(
-        ButtonAction(text = "Showkase", onClick = {
+            ButtonAction(text = "Showkase", onClick = {
 
-        }).takeIf {
-            classExists("com.airbnb.android.showkase.ui.ShowkaseBrowserActivity")
-        }
+            }).takeIf {
+                classExists("com.airbnb.android.showkase.ui.ShowkaseBrowserActivity")
+            },
+            ButtonAction(text = "Network logs", onClick = {
+                context.startActivity(Chucker.getLaunchIntent(context))
+            }).takeIf {
+                classExists("com.chuckerteam.chucker.api.Chucker")
+            },
+            ButtonAction(text = "Leak Canary", onClick = {
+                context.startActivity(LeakCanary.newLeakDisplayActivityIntent())
+            }).takeIf {
+                classExists("leakcanary.LeakCanary")
+            },
+            ButtonAction(text = "Dump Leak Canary", onClick = {
+                LeakCanary.dumpHeap()
+            }).takeIf {
+                classExists("leakcanary.LeakCanary")
+            },
+            ButtonAction(text = "Notification channels", onClick = {
+                val intent = Intent(
+                        Settings.ACTION_APP_NOTIFICATION_SETTINGS
+                ).putExtra(
+                        Settings.EXTRA_APP_PACKAGE, context.packageName
+                )
+                context.startActivity(intent)
+            }).takeIf { Build.VERSION.SDK_INT >= Build.VERSION_CODES.O },
     )
 
     return ActionsModule(
-        icon = IconType.Vector(drawableRes = R.drawable.ic_compose_drawer_dev),
-        title = "Developer Shortcuts",
-        actions = { actions }
+            icon = IconType.Vector(drawableRes = R.drawable.ic_compose_drawer_dev),
+            title = "Developer Shortcuts",
+            actions = { actions }
     )
 }
 
