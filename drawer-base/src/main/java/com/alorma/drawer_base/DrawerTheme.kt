@@ -3,17 +3,20 @@ package com.alorma.drawer_base
 import androidx.compose.material.darkColors
 import androidx.compose.ui.graphics.Color
 
-val blue200 = Color(0xFF72E8F3)
-val blue400 = Color(0xFF00D5EA)
-val pink200 = Color(0xFFF9B1F0)
-val gray = Color(0xFF2D3133)
-val black = Color(0xFF000000)
-
 val drawerColorsPalette = darkColors(
-    primary = blue200,
-    onPrimary = black,
-    primaryVariant = blue400,
-    secondary = pink200,
-    background = gray,
-    surface = gray,
+    primary = Color(0xFF86D7F5),
+    primaryVariant = Color(0xFF1D668F),
+    onPrimary = Color(0xFF1D668F),
+
+    secondary = Color(0xFFFF6340),
+    onSecondary = Color.White,
+
+    background = Color(0xFFFF2D3133),
+    onBackground = Color.White,
+
+    surface = Color(0xFFFF2D3133),
+    onSurface = Color.White,
+
+    error = Color(0xFFD82626),
+    onError = Color.White,
 )
