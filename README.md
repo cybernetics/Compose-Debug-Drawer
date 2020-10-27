@@ -1,3 +1,5 @@
+[![](https://jitpack.io/v/alorma/Compose-Debug-Drawer.svg)](https://jitpack.io/#alorma/Compose-Debug-Drawer)
+
 # Debug Drawer for Jetpack Compose
 
 Composable Debug Drawer for Jetpack Compose apps
