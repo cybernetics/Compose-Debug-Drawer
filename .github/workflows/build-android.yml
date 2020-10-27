@@ -10,7 +10,7 @@ on:
 
 jobs:
   testing:
-    name: Lint Check and Testing
+    name: Build
 
     runs-on: ubuntu-latest
 
