@@ -1,5 +1,13 @@
 name: Build Workflow
 
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
   testing:
     name: Lint Check and Testing
