@@ -11,7 +11,7 @@ class TestDebugModule(
     override val title: String,
     override val tag: String = "Tag: ${title.toLowerCase(Locale.getDefault())}",
 ) : DebugModule {
-    override val icon: IconType = IconType.Vector(drawableRes = R.drawable.ic_baseline_adb_24)
+    override val icon: IconType = IconType.Vector(drawableRes = R.drawable.ic_baseline_adb)
 
     @Composable
     override fun build() {

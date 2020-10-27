@@ -7,10 +7,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.setContent
 import androidx.ui.tooling.preview.Preview
 import com.alorma.composedrawer.ui.ComposeDrawerTheme
+import com.google.firebase.FirebaseApp
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             ComposeDrawerTheme {
                 HomeScreen()

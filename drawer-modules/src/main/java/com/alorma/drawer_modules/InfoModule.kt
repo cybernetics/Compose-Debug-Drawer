@@ -1,14 +1,16 @@
 package com.alorma.drawer_modules
 
+import androidx.compose.foundation.ProvideTextStyle
 import androidx.compose.foundation.Text
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.AmbientEmphasisLevels
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProvideEmphasis
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.ui.tooling.preview.Preview
@@ -18,9 +20,9 @@ import com.alorma.drawer_base.IconType
 
 @Composable
 fun InfoModule(
-    icon: IconType,
-    title: String,
-    items: List<Pair<String, String>>
+        icon: IconType,
+        title: String,
+        items: List<Pair<String, String>>
 ) = object : DebugModule {
     override val icon: IconType = icon
     override val title: String = title
@@ -30,7 +32,7 @@ fun InfoModule(
         Column {
             items.forEachIndexed { index, item ->
                 Column {
-                    InfoContent(item)
+                    DebugModuleInfoContent(item.first, item.second)
                     if (index < items.size - 1) {
                         DrawerDivider()
                     }
@@ -39,35 +41,48 @@ fun InfoModule(
         }
 
     }
+}
 
-    @Composable
-    private fun InfoContent(
-        item: Pair<String, String>
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .preferredHeight(30.dp)
-                .padding(4.dp),
+@Composable
+fun DebugModuleInfoContent(
+        key: String,
+        value: String,
+        onClick: ((String, String) -> Unit)? = null
+) {
+
+    val clickModifier = if (onClick == null) {
+        Modifier
+    } else {
+        Modifier.clickable(onClick = { onClick(key, value) })
+    }
+
+    Row(
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+                modifier = Modifier.preferredWidth(80.dp)
         ) {
-            Box(
-                modifier = Modifier.preferredWidth(100.dp)
-            ) {
+            ProvideTextStyle(value = MaterialTheme.typography.body2) {
                 ProvideEmphasis(emphasis = AmbientEmphasisLevels.current.high) {
                     Text(
-                        text = item.first,
-                        textAlign = TextAlign.Start,
+                            text = key,
+                            textAlign = TextAlign.Start,
                     )
                 }
             }
-            Box(
+        }
+        Box(
                 modifier = Modifier.fillMaxWidth()
-            ) {
-                ProvideEmphasis(emphasis = AmbientEmphasisLevels.current.high) {
+                        .clip(shape = MaterialTheme.shapes.medium)
+                        + clickModifier
+                        + Modifier.padding(8.dp)
+        ) {
+            ProvideTextStyle(value = MaterialTheme.typography.body2) {
+                ProvideEmphasis(emphasis = AmbientEmphasisLevels.current.medium) {
                     Text(
-                        text = item.second,
-                        textAlign = TextAlign.Start,
+                            text = value,
+                            textAlign = TextAlign.Start,
                     )
                 }
             }
@@ -79,15 +94,15 @@ fun InfoModule(
 @Composable
 fun InfoModulePreview() {
     val items = listOf(
-        "Value" to "A",
-        "Value" to "B",
-        "Value large" to "C"
+            "Value" to "A",
+            "Value" to "B",
+            "Value large" to "C"
     )
     InfoModule(
-        icon = IconType.Vector(
-            drawableRes = R.drawable.ic_compose_drawer_adb
-        ),
-        title = "Preview",
-        items = items,
+            icon = IconType.Vector(
+                    drawableRes = R.drawable.ic_compose_drawer_adb
+            ),
+            title = "Preview",
+            items = items,
     ).build()
 }
