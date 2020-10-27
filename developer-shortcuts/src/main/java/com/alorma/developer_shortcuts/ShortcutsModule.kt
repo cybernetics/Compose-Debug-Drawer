@@ -38,19 +38,19 @@ fun ShortcutsModule(): DebugModule {
             context.startActivity(intent)
         }).takeIf { Build.VERSION.SDK_INT >= Build.VERSION_CODES.O },
         TextAction(text = "Leak Canary"),
-        SwitchAction(text = "Enable Leak Canary", isChecked = false, onChange = { enable ->
+        SwitchAction(text = "Enable", isChecked = false, onChange = { enable ->
             AppWatcher.config = AppWatcher.config.copy(enabled = enable)
             LeakCanary.config = LeakCanary.config.copy(dumpHeap = enable)
             LeakCanary.showLeakDisplayActivityLauncherIcon(enable)
         }).takeIf {
             classExists("leakcanary.LeakCanary")
         },
-        ButtonAction(text = "Leak Canary", onClick = {
+        ButtonAction(text = "Reports", onClick = {
             context.startActivity(LeakCanary.newLeakDisplayActivityIntent())
         }).takeIf {
             classExists("leakcanary.LeakCanary")
         },
-        ButtonAction(text = "Dump Leak Canary", onClick = {
+        ButtonAction(text = "Dump", onClick = {
             LeakCanary.dumpHeap()
         }).takeIf {
             classExists("leakcanary.LeakCanary")
