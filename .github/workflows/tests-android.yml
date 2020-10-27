@@ -1,4 +1,4 @@
-name: Build Workflow
+name: Test Workflow
 
 on:
   push:
@@ -10,9 +10,9 @@ on:
 
 jobs:
   testing:
-    name: Build
+    name: UI Test
 
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - name: Clone Repo
@@ -28,5 +28,8 @@ jobs:
           FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
         run: echo $FIREBASE_CONFIG > app/google-services.json
 
-      - name: Assemble Debug APK
-        run: ./gradlew assembleDebug
+      - name: Android Emulator Runner
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          script: ./gradlew connectedCheck
