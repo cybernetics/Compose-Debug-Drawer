@@ -128,6 +128,7 @@ fun SwitchAction(
                 testTag = "Action $tag text"
             }
             Text(
+                color = DrawerColors.current.onSurface,
                 modifier = actionTextSemanticModifier,
                 text = text,
                 textAlign = TextAlign.Start,

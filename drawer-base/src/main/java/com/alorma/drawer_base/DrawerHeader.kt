@@ -46,21 +46,6 @@ fun DrawerModuleHeader(
 }
 
 @Composable
-fun DrawerModuleHeaderText(
-    module: DebugModule
-) {
-    val semanticsModifier = Modifier.semantics {
-        testTag = "Module header text ${module.tag}"
-    }
-    Text(
-        modifier = semanticsModifier,
-        text = module.title,
-        textAlign = TextAlign.Start,
-        fontWeight = FontWeight.Bold,
-    )
-}
-
-@Composable
 fun DrawerModuleHeaderIcon(module: DebugModule, size: Dp) {
 
     val semanticsModifier = Modifier.semantics {
@@ -69,16 +54,34 @@ fun DrawerModuleHeaderIcon(module: DebugModule, size: Dp) {
     val modifier = semanticsModifier + Modifier.preferredSize(size = size)
     when (module.icon) {
         is IconType.Vector -> Icon(
+            tint = DrawerColors.current.onSurface,
             modifier = modifier,
             asset = vectorResource(
                 id = module.icon.drawableRes
             ),
         )
         is IconType.Image -> Icon(
+            tint = DrawerColors.current.onSurface,
             modifier = modifier,
             asset = imageResource(
                 id = module.icon.drawableRes
             ),
         )
     }
+}
+
+@Composable
+fun DrawerModuleHeaderText(
+    module: DebugModule
+) {
+    val semanticsModifier = Modifier.semantics {
+        testTag = "Module header text ${module.tag}"
+    }
+    Text(
+        color = DrawerColors.current.primary,
+        modifier = semanticsModifier,
+        text = module.title,
+        textAlign = TextAlign.Start,
+        fontWeight = FontWeight.Bold,
+    )
 }
