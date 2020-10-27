@@ -20,8 +20,8 @@ allprojects {
 Add dependencies:
 
 ```gradle
-implementation 'com.github.alorma.ComposeDrawer:drawer-base:0.1.0-beta-01'
-implementation 'com.github.alorma.ComposeDrawer:drawer-modules:0.1.0-beta-01'
+implementation 'com.github.alorma.ComposeDrawer:drawer-base:0.1.0-beta-02'
+implementation 'com.github.alorma.ComposeDrawer:drawer-modules:0.1.0-beta-02'
 ```
 
 ## Setup
@@ -83,6 +83,14 @@ Shows information about device running the app such as Device, and manufacturer
 
 <img width="160" src="art/device_module.png" />
 
+#### Shortcuts Module
+
+Some quick shortcuts to open common developer tools.
+
+> Missing any? Open an issue [here](https://github.com/alorma/Compose-Debug-Drawer/issues/new)
+
+<img width="160" src="art/shortcuts_module.png" />
+
 #### Custom Module
 You can create your own module by creating a class that extends: `DrawerModule`
 
@@ -99,6 +107,20 @@ class UserModule : DebugModule {
 ```
 
 ## Theming && Customization
+
+Use `drawerColors` to customize drawer theme colors
+
+```kotlin
+DebugDrawerLayout(
+     drawerColors = YourColorScheme,
+)
+```
+
+#### Custom Modules
+
+Any module has access to `DrawerColors` and must use it to match the colors used by modules from this library 
+
+### Modules list UI
 
 Update module UI by pass `Modifier`
 

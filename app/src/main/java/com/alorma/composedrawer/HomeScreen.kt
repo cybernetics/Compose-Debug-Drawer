@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.ui.tooling.preview.Preview
 import com.alorma.composedrawer.modules.DemoActionsModule
 import com.alorma.composedrawer.ui.ComposeDrawerTheme
+import com.alorma.composedrawer.ui.DarkColorPalette
 import com.alorma.developer_shortcuts.ShortcutsModule
 import com.alorma.drawer_base.DebugDrawerLayout
 import com.alorma.drawer_base.ModuleExpandedState
