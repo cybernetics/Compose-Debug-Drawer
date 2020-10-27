@@ -49,8 +49,10 @@ dependencies {
     implementation project(":drawer-base")
     implementation project(":drawer-modules")
 
+    /*
     compileOnly "com.airbnb.android:showkase:1.0.0-alpha03"
     kapt "com.airbnb.android:showkase-processor:1.0.0-alpha03"
+    */
 
     compileOnly 'com.github.ChuckerTeam.Chucker:library:3.3.0'
     compileOnly 'com.squareup.leakcanary:leakcanary-android:2.4'
