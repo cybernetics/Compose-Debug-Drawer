@@ -10,6 +10,7 @@ import com.alorma.drawer_base.IconType
 import com.alorma.drawer_modules.ActionsModule
 import com.alorma.drawer_modules.ButtonAction
 import com.alorma.drawer_modules.SwitchAction
+import com.alorma.drawer_modules.TextAction
 import com.chuckerteam.chucker.api.Chucker
 import leakcanary.AppWatcher
 import leakcanary.LeakCanary
@@ -28,6 +29,15 @@ fun ShortcutsModule(): DebugModule {
         }).takeIf {
             classExists("com.chuckerteam.chucker.api.Chucker")
         },
+        ButtonAction(text = "Notification channels", onClick = {
+            val intent = Intent(
+                Settings.ACTION_APP_NOTIFICATION_SETTINGS
+            ).putExtra(
+                Settings.EXTRA_APP_PACKAGE, context.packageName
+            )
+            context.startActivity(intent)
+        }).takeIf { Build.VERSION.SDK_INT >= Build.VERSION_CODES.O },
+        TextAction(text = "Leak Canary"),
         SwitchAction(text = "Enable Leak Canary", isChecked = false, onChange = { enable ->
             AppWatcher.config = AppWatcher.config.copy(enabled = enable)
             LeakCanary.config = LeakCanary.config.copy(dumpHeap = enable)
@@ -45,14 +55,6 @@ fun ShortcutsModule(): DebugModule {
         }).takeIf {
             classExists("leakcanary.LeakCanary")
         },
-        ButtonAction(text = "Notification channels", onClick = {
-            val intent = Intent(
-                Settings.ACTION_APP_NOTIFICATION_SETTINGS
-            ).putExtra(
-                Settings.EXTRA_APP_PACKAGE, context.packageName
-            )
-            context.startActivity(intent)
-        }).takeIf { Build.VERSION.SDK_INT >= Build.VERSION_CODES.O },
     )
 
     return ActionsModule(

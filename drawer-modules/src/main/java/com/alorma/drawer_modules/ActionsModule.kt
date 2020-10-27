@@ -65,6 +65,30 @@ abstract class DebugDrawerAction {
 }
 
 @Composable
+fun TextAction(
+    text: String,
+    tag: String? = null,
+    extraModifier: Modifier = Modifier,
+) = object : DebugDrawerAction() {
+
+    override val tag: String
+        get() = tag ?: super.tag
+
+    @Composable
+    override fun build(modifier: Modifier) {
+        Row(
+            modifier = modifier + Modifier.preferredHeight(36.dp) + extraModifier,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                color = DrawerColors.current.secondary,
+                text = text
+            )
+        }
+    }
+}
+
+@Composable
 fun ButtonAction(
     text: String,
     tag: String? = null,
