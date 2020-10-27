@@ -20,9 +20,9 @@ allprojects {
 Add dependencies:
 
 ```gradle
-implementation 'com.github.alorma.Compose-Debug-Drawer:drawer-base:0.1.0-beta-02'
-implementation 'com.github.alorma.Compose-Debug-Drawer.drawer-base:drawer-modules:0.1.0-beta-02'
-implementation 'com.github.alorma.Compose-Debug-Drawer.drawer-base:developer-shortcuts:0.1.0-beta-02'
+implementation 'com.github.alorma.Compose-Debug-Drawer:drawer-base:0.1.0-beta-03'
+implementation 'com.github.alorma.Compose-Debug-Drawer:drawer-modules:0.1.0-beta-03'
+implementation 'com.github.alorma.Compose-Debug-Drawer:developer-shortcuts:0.1.0-beta-03'
 ```
 
 ## Setup

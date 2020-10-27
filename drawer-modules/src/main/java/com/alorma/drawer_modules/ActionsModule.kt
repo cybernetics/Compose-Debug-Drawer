@@ -1,8 +1,6 @@
 package com.alorma.drawer_modules
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Text
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -25,9 +23,9 @@ import com.alorma.drawer_base.IconType
 
 @Composable
 fun ActionsModule(
-    icon: IconType,
-    title: String,
-    actions: @Composable () -> List<DebugDrawerAction>
+        icon: IconType,
+        title: String,
+        actions: @Composable () -> List<DebugDrawerAction>
 ) = object : DebugModule {
 
     override val icon: IconType = icon
@@ -39,13 +37,13 @@ fun ActionsModule(
             val actionItems = actions()
             actionItems.forEachIndexed { index, action ->
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(),
                 ) {
                     val actionsSemanticModifier = Modifier.semantics {
                         testTag = "Action ${action.tag}"
                     }
                     action.build(
-                        modifier = Modifier.fillMaxWidth() + actionsSemanticModifier
+                            modifier = Modifier.fillMaxWidth() + actionsSemanticModifier
                     )
                 }
                 if (index < actionItems.size - 1) {
@@ -66,9 +64,9 @@ abstract class DebugDrawerAction {
 
 @Composable
 fun TextAction(
-    text: String,
-    tag: String? = null,
-    extraModifier: Modifier = Modifier,
+        text: String,
+        tag: String? = null,
+        extraModifier: Modifier = Modifier,
 ) = object : DebugDrawerAction() {
 
     override val tag: String
@@ -77,12 +75,12 @@ fun TextAction(
     @Composable
     override fun build(modifier: Modifier) {
         Row(
-            modifier = modifier + Modifier.preferredHeight(36.dp) + extraModifier,
-            verticalAlignment = Alignment.CenterVertically,
+                modifier = modifier + Modifier.preferredHeight(36.dp) + extraModifier,
+                verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                color = DrawerColors.current.secondary,
-                text = text
+                    color = DrawerColors.current.secondary,
+                    text = text
             )
         }
     }
@@ -90,10 +88,10 @@ fun TextAction(
 
 @Composable
 fun ButtonAction(
-    text: String,
-    tag: String? = null,
-    extraModifier: Modifier = Modifier,
-    onClick: () -> Unit
+        text: String,
+        tag: String? = null,
+        extraModifier: Modifier = Modifier,
+        onClick: () -> Unit
 ) = object : DebugDrawerAction() {
 
     override val tag: String
@@ -102,25 +100,22 @@ fun ButtonAction(
     @Composable
     override fun build(modifier: Modifier) {
         Button(
-            modifier = modifier + extraModifier,
-            backgroundColor = DrawerColors.current.primary,
-            contentColor = DrawerColors.current.onPrimary,
-            onClick = onClick,
-            content = { Text(text) }
+                modifier = modifier + extraModifier,
+                backgroundColor = DrawerColors.current.primary,
+                contentColor = DrawerColors.current.onPrimary,
+                onClick = onClick,
+                content = { Text(text) }
         )
     }
 }
 
 @Composable
 fun SwitchAction(
-    text: String,
-    isChecked: Boolean,
-    tag: String? = null,
-    extraModifier: Modifier = Modifier.border(
-        border = BorderStroke(width = 1.dp, color = DrawerColors.current.primary),
-        shape = MaterialTheme.shapes.medium
-    ),
-    onChange: (checked: Boolean) -> Unit,
+        text: String,
+        isChecked: Boolean,
+        tag: String? = null,
+        extraModifier: Modifier = Modifier,
+        onChange: (checked: Boolean) -> Unit,
 ) = object : DebugDrawerAction() {
 
     override val tag: String
@@ -136,43 +131,43 @@ fun SwitchAction(
         val checkedState: MutableState<Boolean> = remember { mutableStateOf(isChecked) }
 
         Row(
-            modifier = modifier.preferredHeight(36.dp)
-                .clip(shape = MaterialTheme.shapes.medium)
-                .then(extraModifier)
-                .clickable(onClick = {
-                    onSwitchChange(
-                        checkedState = checkedState,
-                        checked = !checkedState.value
-                    )
-                })
-                .padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
+                modifier = modifier.preferredHeight(36.dp)
+                        .clip(shape = MaterialTheme.shapes.medium)
+                        .then(extraModifier)
+                        .clickable(onClick = {
+                            onSwitchChange(
+                                    checkedState = checkedState,
+                                    checked = !checkedState.value
+                            )
+                        })
+                        .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
         ) {
             val actionTextSemanticModifier = Modifier.semantics {
                 testTag = "Action $tag text"
             }
             Text(
-                color = DrawerColors.current.onSurface,
-                modifier = actionTextSemanticModifier,
-                text = text,
-                textAlign = TextAlign.Start,
+                    color = DrawerColors.current.onSurface,
+                    modifier = actionTextSemanticModifier,
+                    text = text,
+                    textAlign = TextAlign.Start,
             )
             Spacer(
-                modifier = Modifier.fillMaxHeight().weight(1f)
+                    modifier = Modifier.fillMaxHeight().weight(1f)
             )
             val actionSwitchSemanticModifier = Modifier.semantics {
                 testTag = "Action $tag switch"
             }
             Switch(
-                modifier = actionSwitchSemanticModifier,
-                color = DrawerColors.current.primary,
-                checked = checkedState.value,
-                onCheckedChange = { checked ->
-                    onSwitchChange(
-                        checkedState = checkedState,
-                        checked = checked
-                    )
-                },
+                    modifier = actionSwitchSemanticModifier,
+                    color = DrawerColors.current.primary,
+                    checked = checkedState.value,
+                    onCheckedChange = { checked ->
+                        onSwitchChange(
+                                checkedState = checkedState,
+                                checked = checked
+                        )
+                    },
             )
         }
     }

@@ -37,7 +37,9 @@ fun ShortcutsModule(): DebugModule {
             )
             context.startActivity(intent)
         }).takeIf { Build.VERSION.SDK_INT >= Build.VERSION_CODES.O },
-        TextAction(text = "Leak Canary"),
+        TextAction(text = "Leak Canary").takeIf {
+            classExists("leakcanary.LeakCanary")
+        },
         SwitchAction(text = "Enable", isChecked = false, onChange = { enable ->
             AppWatcher.config = AppWatcher.config.copy(enabled = enable)
             LeakCanary.config = LeakCanary.config.copy(dumpHeap = enable)
