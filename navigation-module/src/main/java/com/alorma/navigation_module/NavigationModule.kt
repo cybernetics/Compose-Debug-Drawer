@@ -42,6 +42,9 @@ fun NavigationModule(
                         route = routeName,
                         arguments = arguments
                             .filter { !it.value.isNullable }
+                            .map { NavigationArgument(it.key, it.value) },
+                        optionalArguments = arguments
+                            .filter { it.value.isNullable }
                             .map { NavigationArgument(it.key, it.value) }
                     )
                 }
@@ -107,7 +110,8 @@ fun NavigationModule(
 
 private data class NavigationItem(
     val route: String,
-    val arguments: List<NavigationArgument> = emptyList()
+    val arguments: List<NavigationArgument> = emptyList(),
+    val optionalArguments: List<NavigationArgument> = emptyList()
 )
 
 private data class NavigationArgument(
