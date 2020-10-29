@@ -38,37 +38,52 @@ fun NavigationModule(
                     val arguments = navDestination.arguments.toMutableMap()
                     arguments.remove("android-support-nav:controller:route")
 
-                    NavigationItem(
-                        route = routeName,
-                        arguments = arguments
-                            .filter { !it.value.isNullable }
-                            .map { NavigationArgument(it.key, it.value) },
-                        optionalArguments = arguments
-                            .filter { it.value.isNullable }
-                            .map { NavigationArgument(it.key, it.value) }
-                    )
+                    navigationItemFromArguments(routeName, arguments)
                 }
             }.forEach { item: NavigationItem ->
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    colors = ButtonConstants.defaultButtonColors(
-                        backgroundColor = DrawerColors.current.primary,
-                        contentColor = DrawerColors.current.onPrimary,
-                    ),
-                    onClick = {
-                        if (item.arguments.isEmpty()) {
-                            navigateWithoutParams(item)
-                        } else {
-                            navigateWithParams(item)
-                        }
-                    }
-                ) {
-                    Text(text = item.route)
-                }
+                DestinationButton(item)
             }
         }
+    }
+
+    @Composable
+    private fun DestinationButton(
+        item: NavigationItem
+    ) {
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            colors = ButtonConstants.defaultButtonColors(
+                backgroundColor = DrawerColors.current.primary,
+                contentColor = DrawerColors.current.onPrimary,
+            ),
+            onClick = {
+                if (item.arguments.isEmpty()) {
+                    navigateWithoutParams(item)
+                } else {
+                    navigateWithParams(item)
+                }
+            }
+        ) {
+            Text(text = item.route)
+        }
+    }
+
+    @Composable
+    private fun navigationItemFromArguments(
+        routeName: String,
+        arguments: MutableMap<String, NavArgument>
+    ): NavigationItem {
+        return NavigationItem(
+            route = routeName,
+            arguments = arguments
+                .filter { !it.value.isNullable }
+                .map { NavigationArgument(it.key, it.value) },
+            optionalArguments = arguments
+                .filter { it.value.isNullable }
+                .map { NavigationArgument(it.key, it.value) }
+        )
     }
 
     private fun navigateWithoutParams(item: NavigationItem) {
