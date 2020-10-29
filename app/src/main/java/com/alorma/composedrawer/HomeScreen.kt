@@ -4,36 +4,23 @@ import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.DrawerState
+import androidx.compose.material.Scaffold
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import androidx.ui.tooling.preview.Preview
-import com.alorma.composedrawer.modules.DemoActionsModule
+import com.alorma.composedrawer.base.DebugDrawerScreen
 import com.alorma.composedrawer.ui.ComposeDrawerTheme
-import com.alorma.composedrawer.ui.DarkColorPalette
-import com.alorma.developer_shortcuts.ShortcutsModule
-import com.alorma.drawer_base.DebugDrawerLayout
-import com.alorma.drawer_base.ModuleExpandedState
-import com.alorma.drawer_modules.BuildModule
-import com.alorma.drawer_modules.DeviceModule
 
 @Composable
-fun HomeScreen() {
-    DebugDrawerLayout(
-        isDebug = { BuildConfig.DEBUG },
-        initialDrawerState = DrawerValue.Open,
-        initialModulesState = ModuleExpandedState.EXPANDED,
-        drawerModules = {
-            listOf(
-                ShortcutsModule(),
-                DemoActionsModule(),
-                BuildModule(),
-                DeviceModule(),
-            )
-        }
-    ) { drawerState -> AppContent(drawerState) }
+fun HomeScreen(host: NavController) {
+    DebugDrawerScreen(host) { drawerState -> AppContent(drawerState) }
 }
 
 @Composable
@@ -78,6 +65,6 @@ private fun drawerButton(drawerState: DrawerState) {
 @Composable
 fun HomeScreenPreview() {
     ComposeDrawerTheme {
-        HomeScreen()
+        HomeScreen(rememberNavController())
     }
 }
