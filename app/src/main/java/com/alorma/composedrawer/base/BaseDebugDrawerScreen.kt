@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.alorma.composedrawer.BuildConfig
 import com.alorma.composedrawer.modules.DemoActionsModule
+import com.alorma.composedrawer.ui.ComposeDrawerTheme
 import com.alorma.developer_shortcuts.ShortcutsModule
 import com.alorma.drawer_base.DebugDrawerLayout
 import com.alorma.drawer_base.ModuleExpandedState
@@ -18,19 +19,25 @@ fun DebugDrawerScreen(
     host: NavController,
     bodyContent: @Composable (DrawerState) -> Unit
 ) {
-    DebugDrawerLayout(
-        isDebug = { BuildConfig.DEBUG },
-        initialDrawerState = DrawerValue.Open,
-        initialModulesState = ModuleExpandedState.COLLAPSED,
-        drawerModules = {
-            listOf(
-                ShortcutsModule(),
-                NavigationModule(host),
-                DemoActionsModule(),
-                BuildModule(),
-                DeviceModule(),
-            )
-        },
-        bodyContent = bodyContent,
-    )
+    ComposeDrawerTheme {
+        DebugDrawerLayout(
+            isDebug = { BuildConfig.DEBUG },
+            initialDrawerState = DrawerValue.Open,
+            initialModulesState = ModuleExpandedState.COLLAPSED,
+            drawerModules = {
+                listOf(
+                    ShortcutsModule(),
+                    NavigationModule(
+                        navController = host,
+                        stringParam = { route, paramName -> "4321" },
+                        intParam = { route, paramName -> 221 }
+                    ),
+                    DemoActionsModule(),
+                    BuildModule(),
+                    DeviceModule(),
+                )
+            },
+            bodyContent = bodyContent,
+        )
+    }
 }

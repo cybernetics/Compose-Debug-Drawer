@@ -23,21 +23,27 @@ class MainActivity : AppCompatActivity() {
                 navController = host,
                 startDestination = "home",
             ) {
-                composable(route = "home") { HomeScreen(host = host) }
-                composable(route = "profile") { ProfileScreen(host = host) }
-                composable(route = "detail/{detailId}",
+                composable(route = "home") {
+                    HomeScreen(host = host)
+                }
+                composable(route = "profile") {
+                    ProfileScreen(host = host)
+                }
+                composable(route = "detail/{detailId}/{tab}",
                     arguments = listOf(
                         navArgument("detailId") {
                             type = NavType.StringType
+                        },
+                        navArgument("tab") {
+                            type = NavType.IntType
+                            defaultValue = 42
                         }
                     )
                 ) { backStackEntry ->
                     val detailId = backStackEntry.arguments?.getString("detailId")
-                    DetailScreen(host = host, detailId = detailId)
+                    val tab = backStackEntry.arguments?.getInt("tab")
+                    DetailScreen(host = host, detailId = detailId, tab = tab)
                 }
-            }
-            ComposeDrawerTheme {
-                HomeScreen(host)
             }
         }
     }
