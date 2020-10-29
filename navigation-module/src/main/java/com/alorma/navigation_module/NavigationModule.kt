@@ -90,21 +90,31 @@ fun NavigationModule(
         routeName: String,
         argument: NavigationArgument,
     ): String = when (argument.argument.type.name) {
-        "string" -> {
-            if (argument.argument.isDefaultValuePresent) {
-                argument.argument.defaultValue as String
-            } else {
-                stringParam(routeName, argument.name)
-            }
-        }
-        "integer" -> {
-            if (argument.argument.isDefaultValuePresent) {
-                (argument.argument.defaultValue as Int).toString()
-            } else {
-                intParam(routeName, argument.name).toString()
-            }
-        }
+        "string" -> mapString(argument, routeName)
+        "integer" -> mapInteger(argument, routeName)
         else -> ""
+    }
+
+    private fun mapString(
+        argument: NavigationArgument,
+        routeName: String
+    ): String {
+        return if (argument.argument.isDefaultValuePresent) {
+            argument.argument.defaultValue as String
+        } else {
+            stringParam(routeName, argument.name)
+        }
+    }
+
+    private fun mapInteger(
+        argument: NavigationArgument,
+        routeName: String
+    ): String {
+        return if (argument.argument.isDefaultValuePresent) {
+            (argument.argument.defaultValue as Int).toString()
+        } else {
+            intParam(routeName, argument.name).toString()
+        }
     }
 }
 
