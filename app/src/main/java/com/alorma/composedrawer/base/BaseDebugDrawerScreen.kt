@@ -29,8 +29,12 @@ fun DebugDrawerScreen(
                     ShortcutsModule(),
                     NavigationModule(
                         navController = host,
-                        stringParam = { route, paramName -> "4321" },
-                        intParam = { route, paramName -> 221 }
+                        stringParam = { route, paramName ->
+                            "4321"
+                        },
+                        intParam = { route, paramName ->
+                            221
+                        }
                     ),
                     DemoActionsModule(),
                     BuildModule(),

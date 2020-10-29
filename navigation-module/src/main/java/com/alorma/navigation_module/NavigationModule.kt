@@ -9,8 +9,8 @@ import androidx.compose.material.ButtonConstants
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavArgument
 import androidx.navigation.NavController
-import androidx.navigation.NavType
 import androidx.navigation.compose.navigate
 import com.alorma.drawer_base.DebugModule
 import com.alorma.drawer_base.DrawerColors
@@ -42,7 +42,7 @@ fun NavigationModule(
                         route = routeName,
                         arguments = arguments
                             .filter { !it.value.isNullable }
-                            .mapValues { it.value.type }
+                            .map { NavigationArgument(it.key, it.value) }
                     )
                 }
             }.forEach { item: NavigationItem ->
@@ -74,25 +74,43 @@ fun NavigationModule(
 
     private fun navigateWithParams(item: NavigationItem) {
         var route = item.route
-        item.arguments.forEach { argument ->
-            route = route.replace("{${argument.key}}", mapArgumentValue(item.route, argument))
+        item.arguments.forEach { argument: NavigationArgument ->
+            route = route.replace(
+                oldValue = "{${argument.name}}",
+                newValue = mapArgumentValue(item.route, argument)
+            )
         }
-        navController.navigate(
-            route = route
-        )
+        navController.navigate(route = route)
     }
 
     private fun mapArgumentValue(
         routeName: String,
-        item: Map.Entry<String, NavType<*>>
-    ): String = when (item.value.name) {
-        "string" -> stringParam(routeName, item.key)
-        "integer" -> intParam(routeName, item.key).toString()
+        argument: NavigationArgument,
+    ): String = when (argument.argument.type.name) {
+        "string" -> {
+            if (argument.argument.isDefaultValuePresent) {
+                argument.argument.defaultValue as String
+            } else {
+                stringParam(routeName, argument.name)
+            }
+        }
+        "integer" -> {
+            if (argument.argument.isDefaultValuePresent) {
+                (argument.argument.defaultValue as Int).toString()
+            } else {
+                intParam(routeName, argument.name).toString()
+            }
+        }
         else -> ""
     }
 }
 
 private data class NavigationItem(
     val route: String,
-    val arguments: Map<String, NavType<*>> = emptyMap()
+    val arguments: List<NavigationArgument> = emptyList()
+)
+
+private data class NavigationArgument(
+    val name: String,
+    val argument: NavArgument
 )
