@@ -12,9 +12,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.WithConstraints
 import androidx.compose.ui.platform.AmbientDensity
 import androidx.compose.ui.platform.AmbientLayoutDirection
-import androidx.compose.ui.platform.LayoutDirectionAmbient
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import kotlin.math.roundToInt
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
@@ -27,20 +28,15 @@ fun DebugDrawerLayout(
     initialModulesState: ModuleExpandedState = ModuleExpandedState.EXPANDED,
     bodyContent: @Composable (DrawerState) -> Unit
 ) {
-
     val drawerState = rememberDrawerState(initialValue = initialDrawerState)
 
     if (!isDebug()) {
         bodyContent(drawerState)
     }
-
     Providers(
         DrawerColors provides drawerColors
     ) {
         WithConstraints(Modifier.fillMaxSize()) {
-            if (!constraints.hasBoundedWidth) {
-                throw IllegalStateException("Drawer shouldn't have infinite width")
-            }
 
             val minValue = constraints.maxWidth.toFloat()
 
@@ -73,9 +69,10 @@ fun DebugDrawerLayout(
                         Modifier
                             .width(constraints.maxWidth.toDp())
                             .height(constraints.maxHeight.toDp())
+                            .offset { IntOffset(drawerState.offset.value.roundToInt(), 0) }
+                            .padding(start = VerticalDrawerPadding)
                     }
-                        .offset(x = drawerState.offset.value.dp)
-                        .padding(start = VerticalDrawerPadding)
+
                 ) {
                     Surface(
                         shape = MaterialTheme.shapes.large,
