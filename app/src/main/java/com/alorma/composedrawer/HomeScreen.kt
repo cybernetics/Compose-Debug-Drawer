@@ -1,6 +1,5 @@
 package com.alorma.composedrawer
 
-import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -12,7 +11,6 @@ import androidx.compose.ui.unit.dp
 import androidx.ui.tooling.preview.Preview
 import com.alorma.composedrawer.modules.DemoActionsModule
 import com.alorma.composedrawer.ui.ComposeDrawerTheme
-import com.alorma.composedrawer.ui.DarkColorPalette
 import com.alorma.developer_shortcuts.ShortcutsModule
 import com.alorma.drawer_base.DebugDrawerLayout
 import com.alorma.drawer_base.ModuleExpandedState
@@ -48,7 +46,9 @@ private fun AppContent(drawerState: DrawerState) {
         }
     ) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(16.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
         ) {
             drawerButton(drawerState)
         }

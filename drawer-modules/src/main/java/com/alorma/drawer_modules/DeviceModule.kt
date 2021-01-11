@@ -3,6 +3,7 @@ package com.alorma.drawer_modules
 import android.os.Build
 import android.util.DisplayMetrics
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.platform.ContextAmbient
 import androidx.ui.tooling.preview.Preview
 import com.alorma.drawer_base.DebugModule
@@ -24,7 +25,7 @@ fun DeviceModule(): DebugModule {
         }
     }
 
-    val context = ContextAmbient.current
+    val context = AmbientContext.current
 
     val displayMetrics = context.resources.displayMetrics
     val densityBucket = getDensityString(displayMetrics)

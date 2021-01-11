@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun DrawerModule(
     module: DebugModule,
-    modifier: Modifier? = null,
+    modifier: Modifier= Modifier,
     initialModulesState: ModuleExpandedState = ModuleExpandedState.EXPANDED
 ) {
     val expandedState: MutableState<ModuleExpandedState> = remember {
@@ -27,10 +27,9 @@ fun DrawerModule(
     val semanticsModifier = Modifier.semantics {
         testTag = "Module ${module.tag}"
     }
-    val moduleModifier = modifier ?: Modifier
 
     Column(
-        modifier = semanticsModifier + Modifier.fillMaxWidth() + moduleModifier,
+        modifier = semanticsModifier.then(Modifier.fillMaxWidth()).then(modifier),
     ) {
         DrawerModuleHeader(
             module = module,
@@ -45,7 +44,7 @@ fun DrawerModule(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp) + contentSemanticsModifier,
+                    .padding(8.dp).then(contentSemanticsModifier),
             ) {
                 module.build()
             }

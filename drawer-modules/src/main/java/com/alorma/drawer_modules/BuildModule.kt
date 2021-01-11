@@ -3,6 +3,7 @@ package com.alorma.drawer_modules
 import android.content.Context
 import android.os.Build
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.platform.ContextAmbient
 import androidx.ui.tooling.preview.Preview
 import com.alorma.drawer_base.DebugModule
@@ -10,8 +11,7 @@ import com.alorma.drawer_base.IconType
 
 @Composable
 fun BuildModule(): DebugModule {
-    val context = ContextAmbient.current
-
+    val context = AmbientContext.current
 
     fun obtainBuildInfo(context: Context): List<Pair<String, String>> {
         val info = context.packageManager.getPackageInfo(context.packageName, 0)

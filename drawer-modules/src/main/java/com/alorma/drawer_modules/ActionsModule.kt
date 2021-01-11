@@ -1,6 +1,5 @@
 package com.alorma.drawer_modules
 
-import androidx.compose.foundation.Text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -41,7 +40,9 @@ fun ActionsModule(
                         testTag = "Action ${action.tag}"
                     }
                     action.build(
-                        modifier = Modifier.fillMaxWidth() + actionsSemanticModifier
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .then(actionsSemanticModifier)
                     )
                 }
                 if (index < actionItems.size - 1) {
@@ -73,7 +74,9 @@ fun TextAction(
     @Composable
     override fun build(modifier: Modifier) {
         Row(
-            modifier = modifier + Modifier.preferredHeight(36.dp) + extraModifier,
+            modifier = modifier
+                .then(Modifier.preferredHeight(36.dp))
+                .then(extraModifier),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
@@ -98,8 +101,8 @@ fun ButtonAction(
     @Composable
     override fun build(modifier: Modifier) {
         Button(
-            modifier = modifier + extraModifier,
-            colors = ButtonConstants.defaultButtonColors(
+            modifier = modifier.then(extraModifier),
+            colors = ButtonDefaults.buttonColors(
                 backgroundColor = DrawerColors.current.primary,
                 contentColor = DrawerColors.current.onPrimary,
             ),
@@ -131,7 +134,8 @@ fun SwitchAction(
         val checkedState: MutableState<Boolean> = remember { mutableStateOf(isChecked) }
 
         Row(
-            modifier = modifier.preferredHeight(36.dp)
+            modifier = modifier
+                .preferredHeight(36.dp)
                 .clip(shape = MaterialTheme.shapes.medium)
                 .then(extraModifier)
                 .clickable(onClick = {
@@ -153,14 +157,16 @@ fun SwitchAction(
                 textAlign = TextAlign.Start,
             )
             Spacer(
-                modifier = Modifier.fillMaxHeight().weight(1f)
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f)
             )
             val actionSwitchSemanticModifier = Modifier.semantics {
                 testTag = "Action $tag switch"
             }
             Switch(
                 modifier = actionSwitchSemanticModifier,
-                colors = SwitchConstants.defaultColors(
+                colors = SwitchDefaults.colors(
                     checkedThumbColor = DrawerColors.current.primary,
                     uncheckedThumbColor = DrawerColors.current.onSurface,
                     checkedTrackAlpha = 0.6f,

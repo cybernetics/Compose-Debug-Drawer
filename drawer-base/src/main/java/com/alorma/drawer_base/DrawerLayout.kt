@@ -6,11 +6,12 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Providers
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.WithConstraints
 import androidx.compose.ui.gesture.scrollorientationlocking.Orientation
 import androidx.compose.ui.gesture.tapGestureFilter
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.DensityAmbient
+import androidx.compose.ui.layout.WithConstraints
+import androidx.compose.ui.platform.AmbientDensity
+import androidx.compose.ui.platform.AmbientLayoutDirection
 import androidx.compose.ui.platform.LayoutDirectionAmbient
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -18,12 +19,12 @@ import androidx.compose.ui.unit.dp
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
 fun DebugDrawerLayout(
+    modifier: Modifier = Modifier,
     isDebug: () -> Boolean = { false },
     drawerColors: Colors = drawerColorsPalette,
     drawerModules: @Composable () -> List<DebugModule> = { emptyList() },
     initialDrawerState: DrawerValue = DrawerValue.Closed,
     initialModulesState: ModuleExpandedState = ModuleExpandedState.EXPANDED,
-    moduleModifier: Modifier? = null,
     bodyContent: @Composable (DrawerState) -> Unit
 ) {
 
@@ -44,7 +45,7 @@ fun DebugDrawerLayout(
             val minValue = constraints.maxWidth.toFloat()
 
             val anchors = mapOf(minValue to DrawerValue.Closed, 0f to DrawerValue.Open)
-            val isRtl = LayoutDirectionAmbient.current == LayoutDirection.Rtl
+            val isRtl = AmbientLayoutDirection.current == LayoutDirection.Rtl
 
             Box(
                 Modifier.swipeable(
@@ -65,24 +66,25 @@ fun DebugDrawerLayout(
                     open = drawerState.isOpen,
                     onClose = { drawerState.close() },
                     fraction = { calculateFraction(minValue, drawerState.offset.value) },
-                    color = DrawerConstants.defaultScrimColor
+                    color = DrawerDefaults.scrimColor
                 )
                 Box(
-                    modifier = with(DensityAmbient.current) {
+                    modifier = with(AmbientDensity.current) {
                         Modifier
                             .width(constraints.maxWidth.toDp())
                             .height(constraints.maxHeight.toDp())
-                    }.offsetPx(x = drawerState.offset)
+                    }
+                        .offset(x = drawerState.offset.value.dp)
                         .padding(start = VerticalDrawerPadding)
                 ) {
                     Surface(
                         shape = MaterialTheme.shapes.large,
                         color = DrawerColors.current.background,
                         contentColor = DrawerColors.current.onSurface,
-                        elevation = DrawerConstants.DefaultElevation
+                        elevation = DrawerDefaults.Elevation
                     ) {
                         DrawerContent(
-                            moduleModifier = moduleModifier,
+                            modifier = modifier,
                             drawerModules = drawerModules,
                             initialModulesState = initialModulesState
                         )

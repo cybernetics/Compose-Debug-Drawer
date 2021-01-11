@@ -1,10 +1,10 @@
 package com.alorma.drawer_base
 
-import androidx.compose.foundation.Icon
-import androidx.compose.foundation.Text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,7 +30,7 @@ fun DrawerModuleHeader(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .height(48.dp) + semanticModifier,
+            .height(48.dp).then(semanticModifier),
         color = DrawerColors.current.surface,
         contentColor = DrawerColors.current.secondary,
     ) {
@@ -51,19 +51,19 @@ fun DrawerModuleHeaderIcon(module: DebugModule, size: Dp) {
     val semanticsModifier = Modifier.semantics {
         testTag = "Module header icon ${module.tag}"
     }
-    val modifier = semanticsModifier + Modifier.preferredSize(size = size)
+    val modifier = semanticsModifier.then(Modifier.preferredSize(size = size))
     when (module.icon) {
         is IconType.Vector -> Icon(
             tint = DrawerColors.current.onSurface,
             modifier = modifier,
-            asset = vectorResource(
+            imageVector = vectorResource(
                 id = module.icon.drawableRes
             ),
         )
         is IconType.Image -> Icon(
             tint = DrawerColors.current.onSurface,
             modifier = modifier,
-            asset = imageResource(
+            bitmap = imageResource(
                 id = module.icon.drawableRes
             ),
         )

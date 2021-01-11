@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Build
 import android.provider.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.platform.ContextAmbient
 import com.alorma.drawer_base.DebugModule
 import com.alorma.drawer_base.IconType
@@ -17,7 +18,7 @@ import leakcanary.LeakCanary
 
 @Composable
 fun ShortcutsModule(): DebugModule {
-    val context = ContextAmbient.current
+    val context = AmbientContext.current
     val actions = listOfNotNull(
         ButtonAction(text = "Showkase", onClick = {
 
