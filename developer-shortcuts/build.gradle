@@ -49,10 +49,8 @@ dependencies {
     implementation project(":drawer-base")
     implementation project(":drawer-modules")
 
-    /*
-    compileOnly "com.airbnb.android:showkase:1.0.0-alpha03"
-    kapt "com.airbnb.android:showkase-processor:1.0.0-alpha03"
-    */
+    compileOnly "com.airbnb.android:showkase:1.0.0-alpha05"
+    kapt "com.airbnb.android:showkase-processor:1.0.0-alpha05"
 
     compileOnly 'com.github.ChuckerTeam.Chucker:library:3.3.0'
     compileOnly 'com.squareup.leakcanary:leakcanary-android:2.4'
@@ -64,9 +62,4 @@ dependencies {
     implementation "androidx.compose.material:material:1.0.0-alpha09"
     implementation "androidx.ui:ui-tooling:1.0.0-alpha07"
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-rc01'
-
-    testImplementation 'junit:junit:4.13.1'
-
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
