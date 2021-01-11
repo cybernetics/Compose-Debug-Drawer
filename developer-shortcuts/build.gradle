@@ -44,7 +44,7 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.4.21"
 
     implementation project(":drawer-base")
     implementation project(":drawer-modules")
